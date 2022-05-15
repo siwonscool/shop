@@ -24,6 +24,10 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
     private final MemberTokenLoginService memberTokenLoginService;
 
+    /*
+    * 기능 구현은 완료 했으니 TestCase 를 충족해야함
+    * */
+
     //회원가입
     @PostMapping("/join")
     public Long join(@RequestBody MemberInfoRequestDto memberInfoRequestDto){
