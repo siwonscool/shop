@@ -27,8 +27,8 @@ public class MemberTokenLoginService implements MemberService, UserDetailsServic
     }
 
     @Transactional
-    public Member findByEmail(MemberInfoRequestDto memberInfoRequestDto) {
-        return memberRepository.findByEmail(memberInfoRequestDto.getEmail())
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
             .orElseThrow(()-> new IllegalArgumentException("가입되지 않은 e-mail 입니다."));
     }
 }

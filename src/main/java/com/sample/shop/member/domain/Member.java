@@ -34,11 +34,11 @@ public class Member implements UserDetails {
     @Getter
     private Long id;
 
-    @Column
-    private String pw;
-
-    @Column
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String pw;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -49,7 +49,6 @@ public class Member implements UserDetails {
     @Getter
     private List<String> roles = new ArrayList<>();
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
@@ -59,7 +58,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return pw;
     }
 
     @Override
