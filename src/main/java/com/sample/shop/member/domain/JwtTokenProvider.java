@@ -1,0 +1,74 @@
+package com.sample.shop.member.domain;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
+
+@RequiredArgsConstructor
+@Component
+public class JwtTokenProvider {
+
+    private String secretKey = "siwonscool";
+
+    private long tokenValidTime = 30 * 60 * 1000L;
+    private final UserDetailsService userDetailsService;
+
+    @PostConstruct
+    protected void init(){
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
+    public String createToken(String userPk, List<String> roles){
+        //JWT payload 에 저장되는 정보단위
+        Claims claims = Jwts.claims().setSubject(userPk);
+        //key,value 쌍으로 저장
+        claims.put("roles",roles);
+        Date now = new Date();
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + tokenValidTime)) //Expire Time 세팅
+            .signWith(SignatureAlgorithm.HS256,secretKey) //사용할 암호화 알고리즘, signature 에 들어갈 secret 값 세팅
+
+            .compact();
+    }
+
+    //JWT 토큰에서 인증정보 조회
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    // 토큰에서 회원 정보 추출
+    public String getUserPk(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    // Request 의 Header 에서 token 값을 가져옴. "X-AUTH-TOKEN" : "TOKEN 값'
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("X-AUTH-TOKEN");
+    }
+
+    // 토큰의 유효성 + 만료일자 확인
+    public boolean validateToken(String jwtToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}

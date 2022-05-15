@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<th:block layout:fragment="head">
+  <title>SpringBoot shop</title>
+</th:block>
+
+<body>
+<th:block layout:fragment="header" th:indclude = "layout/header"></th:block>
+<h1>메인페이지</h1>
+<p>로그인</p>
+<form action="" method="post">
+  ID : <input type="text" name="id"><br>
+  PW : <input type="password" name="pw"><br><br>
+  <input type="submit" value="로그인">
+</form>
+  <input type="button" alt="" value="회원가입">
+
+<th:block layout:fragment="footer" th:indclude = "layout/footer"></th:block>
+
+</body>
+</html>
