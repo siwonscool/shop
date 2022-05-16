@@ -12,5 +12,4 @@ public class MemberInfoRequestDto {
 
     private String email;
     private String pw;
-
 }

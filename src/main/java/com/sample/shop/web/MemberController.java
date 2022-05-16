@@ -1,8 +1,9 @@
 package com.sample.shop.web;
 
 import com.sample.shop.login.domain.JwtTokenProvider;
+import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
-import com.sample.shop.member.service.MemberTokenLoginService;
+import com.sample.shop.member.service.MemberSignUpService;
 import com.sample.shop.member.request.MemberInfoRequestDto;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class MemberController {
+    //TokenLoginService 에서 사용하면 순환참조 문제 발생
+    //TokenLoginService -> JwtTokenProvider -> UserDetailsService -> TokenLoginService
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final MemberTokenLoginService memberTokenLoginService;
+
+    //Config 에 DIP, OCP 만족하는 아키텍처로 수정하고싶음
+    private final MemberSignUpService memberTokenLoginService;
+    private final TokenLoginService tokenLoginService;
 
     /*
     * 기능 구현은 완료 했으니 TestCase 를 충족해야함
@@ -41,11 +47,7 @@ public class MemberController {
     //로그인
     @PostMapping("/login")
     public String login(@RequestBody MemberInfoRequestDto memberInfoRequestDto){
-        log.info("Email : " + memberInfoRequestDto.getEmail());
-        Member member = memberTokenLoginService.findByEmail(memberInfoRequestDto.getEmail());
-
-        log.info("dto : " + memberInfoRequestDto.getPw());
-        log.info("db : " + member.getPassword());
+        Member member = tokenLoginService.findByEmail(memberInfoRequestDto.getEmail());
         if (!passwordEncoder.matches(memberInfoRequestDto.getPw(),member.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
