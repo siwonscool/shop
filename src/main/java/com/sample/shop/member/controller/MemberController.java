@@ -1,4 +1,4 @@
-package com.sample.shop.web;
+package com.sample.shop.member.controller;
 
 import com.sample.shop.login.domain.JwtTokenProvider;
 import com.sample.shop.login.service.TokenLoginService;

@@ -1,7 +1,7 @@
 package com.sample.shop.login.service;
 
 import com.sample.shop.member.domain.Member;
-import com.sample.shop.member.domain.MemberRepository;
+import com.sample.shop.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
