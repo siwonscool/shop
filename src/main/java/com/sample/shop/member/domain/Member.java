@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,17 +28,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Builder
 @Table(name = "Members")
+@Getter
 public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
+    @Setter
     private String pw;
 
     @Enumerated(EnumType.STRING)
@@ -46,7 +48,6 @@ public class Member implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    @Getter
     private List<String> roles = new ArrayList<>();
 
     @Override
