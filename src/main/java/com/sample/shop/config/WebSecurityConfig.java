@@ -1,4 +1,4 @@
-package com.sample.shop.member.config;
+package com.sample.shop.config;
 
 import com.sample.shop.member.domain.JwtAuthenticationFilter;
 import com.sample.shop.member.domain.JwtTokenProvider;

@@ -3,7 +3,7 @@ package com.sample.shop.web;
 import com.sample.shop.member.domain.JwtTokenProvider;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.service.MemberTokenLoginService;
-import com.sample.shop.web.dto.MemberInfoRequestDto;
+import com.sample.shop.member.request.MemberInfoRequestDto;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
