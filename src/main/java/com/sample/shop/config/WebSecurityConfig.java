@@ -1,7 +1,7 @@
 package com.sample.shop.config;
 
-import com.sample.shop.member.domain.JwtAuthenticationFilter;
-import com.sample.shop.member.domain.JwtTokenProvider;
+import com.sample.shop.login.domain.JwtAuthenticationFilter;
+import com.sample.shop.login.domain.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;

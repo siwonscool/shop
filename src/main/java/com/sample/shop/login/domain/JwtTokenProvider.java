@@ -1,4 +1,4 @@
-package com.sample.shop.member.domain;
+package com.sample.shop.login.domain;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

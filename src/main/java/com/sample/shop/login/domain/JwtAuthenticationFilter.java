@@ -1,4 +1,4 @@
-package com.sample.shop.member.domain;
+package com.sample.shop.login.domain;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;

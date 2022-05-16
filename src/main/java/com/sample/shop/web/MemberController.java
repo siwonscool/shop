@@ -1,6 +1,6 @@
 package com.sample.shop.web;
 
-import com.sample.shop.member.domain.JwtTokenProvider;
+import com.sample.shop.login.domain.JwtTokenProvider;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.service.MemberTokenLoginService;
 import com.sample.shop.member.request.MemberInfoRequestDto;
