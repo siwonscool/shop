@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 @Slf4j
 public class LoginController {
@@ -33,7 +33,7 @@ public class LoginController {
 
     //"로그인이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 생성되야야 한다."
     //"로그인을 할때 로그인 기록을 남겨야 한다. 로그인 기록은 ClientIP, id, 로그인 성공 여부"
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<String> login(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto, HttpServletRequest request) {
         Member member = tokenLoginService.findByEmail(memberInfoRequestDto.getEmail());
