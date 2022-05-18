@@ -4,9 +4,13 @@ import com.sample.shop.login.domain.JwtTokenProvider;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.request.MemberInfoRequestDto;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
+@Slf4j
 public class LoginController {
 
     //TokenLoginService 에서 사용하면 순환참조 문제 발생
@@ -24,17 +29,38 @@ public class LoginController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    //Config 에 DIP, OCP 만족하는 아키텍처로 수정하고싶음
     private final TokenLoginService tokenLoginService;
 
-    //로그인
+    //"로그인이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 생성되야야 한다."
+    //"로그인을 할때 로그인 기록을 남겨야 한다. 로그인 기록은 ClientIP, id, 로그인 성공 여부"
     @PostMapping
-    public String login(@RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
+    public ResponseEntity<String> login(
+        @RequestBody final MemberInfoRequestDto memberInfoRequestDto, HttpServletRequest request) {
         Member member = tokenLoginService.findByEmail(memberInfoRequestDto.getEmail());
+
         if (!passwordEncoder.matches(memberInfoRequestDto.getPw(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+        }else{
+            log.info(this.getClientIp(request));
+            log.info(member.getEmail());
+            log.info("로그인을 성공하였습니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+
+        return ResponseEntity.ok(
+            jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
     }
+
+    private String getClientIp(HttpServletRequest request){
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
+
+    //"로그아웃이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 삭제(expire상태) 되어야 한다."
+    //JWT 는 서버쪽에서 로그아웃 할 수 없으므로 Redis 를 사용하여 토큰을 DB에 저장하고 요청시마다 검사해야함... 후..
+
+
 
 }

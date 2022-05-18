@@ -12,6 +12,11 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
+  #redis config
+  redis:
+    port: 6379
+    host: localhost
+
 #Thymleaf prefix, suffix
   #정적 리소스 변화있을시 바로 반영
   devtools:
