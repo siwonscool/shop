@@ -5,7 +5,7 @@ import com.sample.shop.member.domain.MemberStatus;
 import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.shared.member.MemberAdaptor;
-import com.sample.shop.shared.member.exception.EmailDuplicateException;
+import com.sample.shop.shared.exception.EmailDuplicateException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

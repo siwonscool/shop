@@ -1,4 +1,4 @@
-package com.sample.shop.shared.member.exception;
+package com.sample.shop.shared.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
