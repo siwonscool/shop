@@ -1,4 +1,4 @@
-package com.sample.shop.member.response;
+package com.sample.shop.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @JsonInclude(Include.NON_NULL)
 @RequiredArgsConstructor
-public class EmptyJsonResponse {
+public class EmptyJsonResponseDto {
     private final String errorMessage;
 }

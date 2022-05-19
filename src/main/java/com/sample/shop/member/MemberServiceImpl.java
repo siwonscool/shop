@@ -1,8 +1,8 @@
-package com.sample.shop.member.service;
+package com.sample.shop.member;
 
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
-import com.sample.shop.member.request.MemberInfoRequestDto;
+import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.shared.member.MemberAdaptor;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -12,32 +12,38 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class MemberSignUpService implements MemberService {
+public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberAdaptor save(Member member) {
+    public MemberAdaptor save(final Member member) {
         member.setPw(passwordEncoder.encode(member.getPassword()));
         return this.convertMemberAdaptor(memberRepository.save(member));
     }
 
     @Transactional
-    public void updateMemberStatusActivate() {
-        memberRepository.updateMemberStatusActivate();
+    public void updateMemberStatusActivate(final Long id) {
+        Member member = this.findById(id);
+        member.updateMemberStatusActivate();
     }
 
     @Transactional
-    public Optional<Member> isDuplicateEmail(MemberInfoRequestDto memberInfoRequestDto) {
+    public void updateMemberStatusWithdrawal(final Long id) {
+        Member member = this.findById(id);
+        member.updateMemberStatusWithdrawal();
+    }
+
+    @Transactional
+    public Optional<Member> isDuplicateEmail(final MemberInfoRequestDto memberInfoRequestDto) {
         return memberRepository.findByEmail(memberInfoRequestDto.getEmail());
     }
 
-    @Transactional
-    public void delete(Long id) {
-        memberRepository.findById(id)
+
+    public Member findById(Long id){
+        return memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다. id = " + id));
-        memberRepository.updateMemberStatusWITHDRAWAL(id);
     }
 
     private MemberAdaptor convertMemberAdaptor(final Member member) {

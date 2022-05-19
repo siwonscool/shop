@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "Members")
 @Getter
 public class Member implements UserDetails {
@@ -47,8 +44,36 @@ public class Member implements UserDetails {
     private MemberStatus memberStatus;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @Builder
+    private Member(String email, String pw,MemberStatus memberStatus, List<String> roles) {
+        this.email = email;
+        this.pw = pw;
+        this.memberStatus = memberStatus;
+        this.roles = roles;
+    }
+
+    public static Member of(String email, String pw, MemberStatus memberStatus, List<String> roles){
+        return Member.builder()
+            .email(email)
+            .pw(pw)
+            .memberStatus(memberStatus)
+            .roles(roles)
+            .build();
+    }
+
+    public Member updateMemberStatusActivate(){
+        this.memberStatus = MemberStatus.ACTIVATE;
+        return this;
+    }
+
+    public Member updateMemberStatusWithdrawal(){
+        this.memberStatus = MemberStatus.WITHDRAWAL;
+        return this;
+    }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

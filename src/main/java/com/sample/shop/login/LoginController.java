@@ -1,14 +1,13 @@
-package com.sample.shop.login.controller;
+package com.sample.shop.login;
 
 import com.sample.shop.login.domain.JwtTokenProvider;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
-import com.sample.shop.member.request.MemberInfoRequestDto;
+import com.sample.shop.member.dto.MemberInfoRequestDto;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
