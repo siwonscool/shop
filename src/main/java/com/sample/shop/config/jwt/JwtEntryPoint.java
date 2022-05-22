@@ -1,4 +1,4 @@
-package com.sample.shop.login.domain;
+package com.sample.shop.config.jwt;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

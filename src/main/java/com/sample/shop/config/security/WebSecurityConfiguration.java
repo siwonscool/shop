@@ -1,7 +1,8 @@
-package com.sample.shop.config;
+package com.sample.shop.config.security;
 
-import com.sample.shop.login.domain.JwtAuthenticationFilter;
-import com.sample.shop.login.domain.JwtEntryPoint;
+import com.sample.shop.config.security.CustomUserDetailService;
+import com.sample.shop.config.jwt.JwtAuthenticationFilter;
+import com.sample.shop.config.jwt.JwtEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -57,8 +57,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/", "/join/**", "/login", "/health").permitAll()
-            .anyRequest().hasRole("USER")
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/user/**").hasRole("USER")
+            .antMatchers("/**").permitAll() //나머지 요청은 누구나 접근가능
 
             .and()
             .exceptionHandling()

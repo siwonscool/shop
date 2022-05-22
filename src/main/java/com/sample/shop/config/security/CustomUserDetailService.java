@@ -1,5 +1,6 @@
-package com.sample.shop.config;
+package com.sample.shop.config.security;
 
+import com.sample.shop.config.cache.CacheKey;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
 import java.util.NoSuchElementException;

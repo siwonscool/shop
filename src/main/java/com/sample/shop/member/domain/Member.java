@@ -1,8 +1,12 @@
 package com.sample.shop.member.domain;
 
+import com.sample.shop.member.dto.MemberInfoRequestDto;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,54 +17,86 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static java.util.stream.Collectors.toList;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
+
+
 @Entity
-@NoArgsConstructor
-@Table(name = "Members")
 @Getter
-public class Member implements UserDetails {
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PROTECTED)
+@Builder
+public class Member{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "MEMBER_ID")
     private Long id;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     @Setter
-    private String pw;
+    private String password;
+
+    @Column(unique = true)
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column
     private MemberStatus memberStatus;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<Authority> authorities = new HashSet<>();
 
-    @Builder
-    private Member(String email, String pw,MemberStatus memberStatus, List<String> roles) {
-        this.email = email;
-        this.pw = pw;
-        this.memberStatus = memberStatus;
-        this.roles = roles;
+    public static Member ofUser(MemberInfoRequestDto memberInfoRequestDto) {
+        Member member = Member.builder()
+            .username(UUID.randomUUID().toString())
+            .email(memberInfoRequestDto.getEmail())
+            .password(memberInfoRequestDto.getPassword())
+            .nickname(memberInfoRequestDto.getNickname())
+            .memberStatus(MemberStatus.READY)
+            .build();
+        member.addAuthority(Authority.ofUser(member));
+        return member;
     }
 
-    public static Member of(String email, String pw, MemberStatus memberStatus, List<String> roles){
-        return Member.builder()
-            .email(email)
-            .pw(pw)
-            .memberStatus(memberStatus)
-            .roles(roles)
+    public static Member ofAdmin(MemberInfoRequestDto memberInfoRequestDto) {
+        Member member = Member.builder()
+            .username(UUID.randomUUID().toString())
+            .email(memberInfoRequestDto.getEmail())
+            .password(memberInfoRequestDto.getPassword())
+            .nickname(memberInfoRequestDto.getNickname())
+            .memberStatus(MemberStatus.READY)
             .build();
+        member.addAuthority(Authority.ofAdmin(member));
+        return member;
+    }
+
+    private void addAuthority(Authority authority) {
+        authorities.add(authority);
+    }
+
+    public List<String> getRoles() {
+        return authorities.stream()
+            .map(Authority::getRole)
+            .collect(toList());
     }
 
     public Member updateMemberStatusActivate(){
@@ -73,42 +109,4 @@ public class Member implements UserDetails {
         return this;
     }
 
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return pw;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

@@ -45,4 +45,9 @@ spring:
     #templates 디렉토리에 파일이 있는지 없는지 체크, 없으면 에러를 발생
     check-template-location: true
 
+jwt:
+  header: Authorization
+  secret: 123fggreg234gdgr234sdfhsdoh
+
+
 

@@ -1,6 +1,6 @@
 package com.sample.shop.login;
 
-import com.sample.shop.login.domain.JwtTokenProvider;
+import com.sample.shop.config.jwt.JwtTokenProvider;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
@@ -37,7 +37,7 @@ public class LoginController {
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto, HttpServletRequest request) {
         Member member = tokenLoginService.findByEmail(memberInfoRequestDto.getEmail());
 
-        if (!passwordEncoder.matches(memberInfoRequestDto.getPw(), member.getPassword())) {
+        if (!passwordEncoder.matches(memberInfoRequestDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }else{
             log.info(this.getClientIp(request));
@@ -46,7 +46,7 @@ public class LoginController {
         }
 
         return ResponseEntity.ok(
-            jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+            jwtTokenProvider.generateAccessToken(member.getUsername()));
     }
 
     private String getClientIp(HttpServletRequest request){

@@ -16,8 +16,9 @@ public class TokenLoginService implements LoginService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(username)
-                .orElseThrow(()->new UsernameNotFoundException("사용자를 찾을수 없습니다."));
+        return null;
+        /*return memberRepository.findByEmail(username)
+                .orElseThrow(()->new UsernameNotFoundException("사용자를 찾을수 없습니다."));*/
     }
 
     @Transactional

@@ -1,23 +1,20 @@
-package com.sample.shop.login.domain;
+package com.sample.shop.config.jwt;
 
-import com.sample.shop.config.CustomUserDetailService;
+import com.sample.shop.config.security.CustomUserDetailService;
+import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -49,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //헤더에서 JWT 를 'Bearer' 를 제외하여 가져오고 프론트에서 JWT 를 주지 않는 경우 null 을 반환
     private String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer")){
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
             return authHeader.substring(7);
         }
         return null;

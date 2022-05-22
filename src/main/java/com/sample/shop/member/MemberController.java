@@ -31,21 +31,27 @@ public class MemberController {
     //"회원가입을 처리한다. 성공적으로 처리되면 HttpStatus 201이 나와야 하며 member의 id값이 null이 아니여야 한며 member의 상태는 대기중(READY) 이여야 한다."
     //"회원 가입시에 email 중복 체크 기능이 있어야 한다. 중복일경우 Duplicate Exception이 발생하며 API Response 에 그 내용이 기술되어야 한다. (이유, 오류 메시지)"
     @PostMapping("/join")
-    public ResponseEntity<MemberAdaptor> join(
+    public ResponseEntity<Member> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
         try {
             if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
                 return new ResponseEntity(new EmailDuplicateException("중복되는 이메일이 존재합니다."),
                     HttpStatus.INTERNAL_SERVER_ERROR);
             } else {
-                return ResponseEntity.ok(memberServiceImpl.save(
-                    Member.of(memberInfoRequestDto.getEmail(), memberInfoRequestDto.getPw(),
-                        MemberStatus.READY, Collections.singletonList("ROLE_USER"))));
+                //response 가 안옴..,, DB 저장은됨
+                return ResponseEntity.ok(memberServiceImpl.save(memberInfoRequestDto));
             }
         } catch (Exception e) {
             return new ResponseEntity(new EmptyJsonResponseDto(e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //admin 회원가입
+    @PostMapping("/join/admin")
+    public String joinAdmin(@RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
+        memberServiceImpl.joinAdmin(memberInfoRequestDto);
+        return "어드민 회원 가입 완료";
     }
 
     //"회원가입후 가입대기중인 회원을 대상으로 회원상태를 활성(ACTIVATE) 상태로 바뀌어야 한다."

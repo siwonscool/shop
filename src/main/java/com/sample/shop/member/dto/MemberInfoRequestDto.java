@@ -4,6 +4,7 @@ package com.sample.shop.member.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Getter
@@ -11,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class MemberInfoRequestDto {
 
     private String email;
-    private String pw;
+    @Setter
+    private String password;
+    private String nickname;
 }

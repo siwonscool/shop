@@ -18,9 +18,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberAdaptor save(final Member member) {
-        member.setPw(passwordEncoder.encode(member.getPassword()));
-        return this.convertMemberAdaptor(memberRepository.save(member));
+    public Member save(final MemberInfoRequestDto memberInfoRequestDto) {
+        memberInfoRequestDto.setPassword(passwordEncoder.encode(memberInfoRequestDto.getPassword()));
+        return memberRepository.save(Member.ofUser(memberInfoRequestDto));
     }
 
     @Transactional
@@ -50,10 +50,12 @@ public class MemberServiceImpl implements MemberService {
         return MemberAdaptor.builder()
             .id(member.getId())
             .email(member.getEmail())
-            .pw(member.getPw())
+            .pw(member.getPassword())
             .memberStatus(member.getMemberStatus())
             .roles(member.getRoles())
             .build();
     }
 
+    public void joinAdmin(MemberInfoRequestDto memberInfoRequestDto) {
+    }
 }
