@@ -47,13 +47,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private MemberAdaptor convertMemberAdaptor(final Member member) {
-        return MemberAdaptor.builder()
-            .id(member.getId())
-            .email(member.getEmail())
-            .pw(member.getPassword())
-            .memberStatus(member.getMemberStatus())
-            .roles(member.getRoles())
-            .build();
+        return MemberAdaptor.of(member);
     }
 
     public void joinAdmin(MemberInfoRequestDto memberInfoRequestDto) {
