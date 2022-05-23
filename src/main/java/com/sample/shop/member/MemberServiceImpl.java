@@ -18,9 +18,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Member save(final MemberInfoRequestDto memberInfoRequestDto) {
+    public MemberAdaptor save(final MemberInfoRequestDto memberInfoRequestDto) {
         memberInfoRequestDto.setPassword(passwordEncoder.encode(memberInfoRequestDto.getPassword()));
-        return memberRepository.save(Member.ofUser(memberInfoRequestDto));
+        return convertMemberAdaptor(memberRepository.save(Member.ofUser(memberInfoRequestDto)));
     }
 
     @Transactional
@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    public Member findById(Long id){
+    public Member findById(final Long id){
         return memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다. id = " + id));
     }

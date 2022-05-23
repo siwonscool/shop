@@ -1,30 +1,22 @@
 package com.sample.shop.member.domain;
 
 import com.sample.shop.member.dto.MemberInfoRequestDto;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import static java.util.stream.Collectors.toList;
 import static javax.persistence.CascadeType.ALL;
@@ -54,7 +46,7 @@ public class Member{
     @Setter
     private String password;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
