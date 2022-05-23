@@ -1,12 +1,9 @@
 package com.sample.shop.member;
 
-import com.sample.shop.member.domain.Member;
-import com.sample.shop.member.domain.MemberStatus;
 import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.shared.member.MemberAdaptor;
 import com.sample.shop.shared.exception.EmailDuplicateException;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +35,6 @@ public class MemberController {
                 return new ResponseEntity(new EmailDuplicateException("중복되는 이메일이 존재합니다."),
                     HttpStatus.INTERNAL_SERVER_ERROR);
             } else {
-                //response 가 안옴..,, DB 저장은됨
                 return ResponseEntity.ok(memberServiceImpl.save(memberInfoRequestDto));
             }
         } catch (Exception e) {
