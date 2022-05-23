@@ -1,4 +1,4 @@
-package com.sample.shop.shared.member;
+package com.sample.shop.shared.adaptor;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

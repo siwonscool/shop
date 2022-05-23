@@ -2,7 +2,7 @@ package com.sample.shop.member;
 
 import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
-import com.sample.shop.shared.member.MemberAdaptor;
+import com.sample.shop.shared.adaptor.MemberAdaptor;
 import com.sample.shop.shared.exception.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
