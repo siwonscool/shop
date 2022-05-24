@@ -30,6 +30,7 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
+        log.info("join controller start");
         try {
             if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
                 return new ResponseEntity(new EmailDuplicateException("중복되는 이메일이 존재합니다."),
