@@ -30,6 +30,7 @@ public class LoginController {
 
     //"로그인이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 생성되야야 한다."
     //"로그인을 할때 로그인 기록을 남겨야 한다. 로그인 기록은 ClientIP, id, 로그인 성공 여부"
+    //Oauth 방식으로 구현하려면 로그인도 토큰으로
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(
         @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request) {

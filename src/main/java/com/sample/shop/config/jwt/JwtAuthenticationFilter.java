@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+//OncePerRequestFilter 말고 앞전에 쓴 필터도 있는데 차이점
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailService customUserDetailService;
@@ -28,6 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        // if 무시하고 지나가야하는 url 만나면 return
+
         FilterChain filterChain) throws ServletException, IOException {
         String accessToken = getToken(request);
         if (accessToken != null) {
@@ -38,9 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 equalsUsernameFromTokenAndUserDetails(userDetails.getUsername(), username);
                 validateAccessToken(accessToken, userDetails);
                 processSecurity(request, userDetails);
+                filterChain.doFilter(request, response);
             }
         }
-        filterChain.doFilter(request, response);
+
+        // 여기에는 response 응답객체 (에러메세지 http 상태코드)
     }
 
     //헤더에서 JWT 를 'Bearer' 를 제외하여 가져오고 프론트에서 JWT 를 주지 않는 경우 null 을 반환
