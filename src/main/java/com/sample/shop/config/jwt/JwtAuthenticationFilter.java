@@ -41,9 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 equalsUsernameFromTokenAndUserDetails(userDetails.getUsername(), username);
                 validateAccessToken(accessToken, userDetails);
                 processSecurity(request, userDetails);
-                filterChain.doFilter(request, response);
             }
         }
+        filterChain.doFilter(request, response);
 
         // 여기에는 response 응답객체 (에러메세지 http 상태코드)
     }
