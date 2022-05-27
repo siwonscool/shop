@@ -83,8 +83,9 @@ public class TokenLoginService implements LoginService {
         logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken,username,remainMilliSecond));
     }
 
-    public static String getCurrentUsername() {
+    public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //String 은 UserDetails 로 캐스팅 할수 없음... 어케해결해,,.,.,...
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         return principal.getUsername();
     }
