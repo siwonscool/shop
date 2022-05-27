@@ -67,9 +67,9 @@ public class MemberServiceImpl implements MemberService {
     public MemberInfoResponseDto getMemberInfo(String email) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new NoSuchElementException("가입한 회원이 아닙니다."));
-        if (!member.getUsername().equals(TokenLoginService.getCurrentUsername())) {
+        /*if (!member.getUsername().equals(TokenLoginService.getCurrentUsername())) {
             throw new IllegalArgumentException("회원정보가 일치하지 않습니다.");
-        }
+        }*/
         return new MemberInfoResponseDto(member.getEmail(),member.getNickname());
     }
 }
