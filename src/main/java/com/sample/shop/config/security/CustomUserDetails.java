@@ -18,14 +18,18 @@ import static java.util.stream.Collectors.toList;
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
+    private String email;
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+    private String nickname;
 
     public static UserDetails of(Member member){
         return CustomUserDetails.builder()
             .username(member.getUsername())
+            .email(member.getEmail())
             .password(member.getPassword())
             .roles(member.getRoles())
+            .nickname(member.getNickname())
             .build();
     }
 
