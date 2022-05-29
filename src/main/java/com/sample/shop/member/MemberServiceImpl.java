@@ -14,6 +14,7 @@ import com.sample.shop.shared.adaptor.MemberAdaptor;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
@@ -67,6 +69,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberInfoResponseDto getMemberInfo(String email) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new NoSuchElementException("가입한 회원이 아닙니다."));
+        log.info("Member DB 조회중");
         if (!member.getUsername().equals(tokenLoginService.getCurrentUsername())) {
             throw new IllegalArgumentException("회원정보가 일치하지 않습니다.");
         }

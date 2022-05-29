@@ -3,6 +3,7 @@ package com.sample.shop.login.service;
 import com.sample.shop.config.cache.CacheKey;
 import com.sample.shop.config.jwt.JwtExpirationEnums;
 import com.sample.shop.config.jwt.JwtTokenProvider;
+import com.sample.shop.config.security.CustomUserDetails;
 import com.sample.shop.login.domain.LogoutAccessToken;
 import com.sample.shop.login.domain.RefreshToken;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
@@ -12,6 +13,7 @@ import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
+import java.security.Principal;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,23 +86,32 @@ public class TokenLoginService implements LoginService {
         logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken,username,remainMilliSecond));
     }
 
-    public String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //String 은 UserDetails 로 캐스팅 할수 없음... 어케해결해,,.,.,...
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        return principal.getUsername();
-    }
-
     public TokenResponseDto regeneration(String refreshToken) {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();
+        log.info("username : " + username);
         RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(username)
             .orElseThrow(NoSuchElementException::new);
-
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())) {
             return regenerateRefreshToken(refreshToken, username);
         }
         throw new IllegalArgumentException("토큰이 일치하지 않습니다.");
+    }
+
+    public String getCurrentUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return ((CustomUserDetails) principal).getUsername();
+        /*if (principal instanceof UserDetails) {
+            return ((UserDetails)principal).getUsername();
+        } else {
+            return principal.toString();
+        }*/
+
+        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("auth name : "+ authentication.getName());
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        return username;*/
     }
 
     private TokenResponseDto regenerateRefreshToken(String refreshToken, String username) {

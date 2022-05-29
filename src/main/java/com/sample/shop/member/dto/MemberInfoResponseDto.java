@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberInfoResponseDto {

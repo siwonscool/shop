@@ -79,8 +79,7 @@ public class MemberController {
     //토큰 재발급
     @PostMapping("/regenerate")
     public ResponseEntity<TokenResponseDto> regenerateToken(@RequestHeader("RefreshToken") String refreshToken){
+        log.info("refreshToken : " + refreshToken);
         return ResponseEntity.ok(tokenLoginService.regeneration(refreshToken));
     }
-
-
 }
