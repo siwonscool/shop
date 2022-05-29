@@ -46,7 +46,6 @@ spring:
     check-template-location: true
 
 jwt:
-  header: Authorization
   secret: osdpafgmpo3mwpo3201450##423553fgm340o0osdmfoasgmo243481nkgsdkng2139tni2349nfn9fnk
 
 

@@ -17,7 +17,6 @@ import static java.util.stream.Collectors.toList;
 
 
 @NoArgsConstructor
-@Getter
 public class CustomUserDetails implements UserDetails {
 
     private String username;
@@ -49,7 +48,7 @@ public class CustomUserDetails implements UserDetails {
             .collect(toList());
     }
 
-/*    @Override
+    @Override
     public String getPassword() {
         return password;
     }
@@ -57,7 +56,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return username;
-    }*/
+    }
 
     @Override
     @JsonIgnore

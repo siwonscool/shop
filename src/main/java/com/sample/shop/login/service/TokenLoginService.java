@@ -101,17 +101,15 @@ public class TokenLoginService implements LoginService {
     public String getCurrentUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return ((CustomUserDetails) principal).getUsername();
-        /*if (principal instanceof UserDetails) {
+        if (principal instanceof UserDetails) {
             return ((UserDetails)principal).getUsername();
         } else {
             return principal.toString();
-        }*/
-
-        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        }
+/*      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("auth name : "+ authentication.getName());
         UserDetails principal = (UserDetails) authentication.getPrincipal();
-        return username;*/
+        return principal.getUsername();*/
     }
 
     private TokenResponseDto regenerateRefreshToken(String refreshToken, String username) {
