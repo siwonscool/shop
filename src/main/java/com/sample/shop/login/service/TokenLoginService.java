@@ -3,7 +3,6 @@ package com.sample.shop.login.service;
 import com.sample.shop.config.cache.CacheKey;
 import com.sample.shop.config.jwt.JwtExpirationEnums;
 import com.sample.shop.config.jwt.JwtTokenProvider;
-import com.sample.shop.config.security.CustomUserDetails;
 import com.sample.shop.login.domain.LogoutAccessToken;
 import com.sample.shop.login.domain.RefreshToken;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
@@ -12,8 +11,6 @@ import com.sample.shop.login.dto.LoginRequestDto;
 import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
-import com.sample.shop.shared.adaptor.MemberAdaptor;
-import java.security.Principal;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +37,7 @@ public class TokenLoginService implements LoginService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public TokenResponseDto login(LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public TokenResponseDto login(final LoginRequestDto loginRequestDto, HttpServletRequest request) {
         Member member = memberRepository.findByEmail(loginRequestDto.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 e-mail 입니다."));
 
@@ -99,17 +95,17 @@ public class TokenLoginService implements LoginService {
     }
 
     public String getCurrentUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
             return ((UserDetails)principal).getUsername();
         } else {
             return principal.toString();
-        }
-/*      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        }*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("auth name : "+ authentication.getName());
         UserDetails principal = (UserDetails) authentication.getPrincipal();
-        return principal.getUsername();*/
+        return principal.getUsername();
     }
 
     private TokenResponseDto regenerateRefreshToken(String refreshToken, String username) {

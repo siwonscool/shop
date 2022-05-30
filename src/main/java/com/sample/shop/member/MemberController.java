@@ -1,5 +1,6 @@
 package com.sample.shop.member;
 
+import com.sample.shop.config.security.CustomUserDetails;
 import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.dto.EmptyJsonResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,13 +74,14 @@ public class MemberController {
 
     //회원정보 조회
     @GetMapping("/{email}")
-    public MemberInfoResponseDto getMemberAdaptor(@PathVariable String email){
+    public MemberInfoResponseDto getMemberAdaptor(@PathVariable String email) {
         return memberServiceImpl.getMemberInfo(email);
     }
 
     //토큰 재발급
     @PostMapping("/regenerate")
-    public ResponseEntity<TokenResponseDto> regenerateToken(@RequestHeader("RefreshToken") String refreshToken){
+    public ResponseEntity<TokenResponseDto> regenerateToken(
+        @RequestHeader("RefreshToken") String refreshToken) {
         log.info("refreshToken : " + refreshToken);
         return ResponseEntity.ok(tokenLoginService.regeneration(refreshToken));
     }

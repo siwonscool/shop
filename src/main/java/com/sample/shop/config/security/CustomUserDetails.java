@@ -15,21 +15,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import static java.util.stream.Collectors.toList;
 
-
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CustomUserDetails implements UserDetails {
 
     private String username;
     private String password;
+    @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @Builder
+    /*@Builder
     public CustomUserDetails(String username, String password,
         List<String> roles) {
         this.username = username;
         this.password = password;
         this.roles = roles;
-    }
+    }*/
 
 
     public static UserDetails of(Member member) {

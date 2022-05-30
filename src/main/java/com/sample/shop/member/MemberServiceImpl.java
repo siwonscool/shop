@@ -40,12 +40,12 @@ public class MemberServiceImpl implements MemberService {
         return convertMemberAdaptor(memberRepository.save(Member.ofUser(memberInfoRequestDto)));
     }
 
-    public void updateMemberStatusActivate(final Long id) {
+    public void updateMemberStatusActivate(Long id) {
         Member member = this.findById(id);
         member.updateMemberStatusActivate();
     }
 
-    public void updateMemberStatusWithdrawal(final Long id) {
+    public void updateMemberStatusWithdrawal(Long id) {
         Member member = this.findById(id);
         member.updateMemberStatusWithdrawal();
     }
@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByEmail(memberInfoRequestDto.getEmail());
     }
 
-    private Member findById(final Long id) {
+    private Member findById(Long id) {
         return memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다. id = " + id));
     }

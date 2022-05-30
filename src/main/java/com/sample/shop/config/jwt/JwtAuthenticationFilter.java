@@ -29,13 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-        // if 무시하고 지나가야하는 url 만나면 return
-
         FilterChain filterChain) throws ServletException, IOException {
+        // if 무시하고 지나가야하는 url 만나면 return
         String accessToken = getToken(request);
         if (accessToken != null) {
             checkLogout(accessToken);
             String username = jwtTokenProvider.getUsername(accessToken);
+            log.info("현재 토큰의 username : " + username);
             if (username != null) {
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
                 equalsUsernameFromTokenAndUserDetails(userDetails.getUsername(), username);
