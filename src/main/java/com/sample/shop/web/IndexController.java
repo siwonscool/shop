@@ -10,4 +10,9 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/member/join")
+    public String join(){
+        return "member/member-register";
+    }
 }

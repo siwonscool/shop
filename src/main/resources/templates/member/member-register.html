@@ -8,17 +8,17 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-  <h1>메인페이지</h1>
+  <h1>회원가입</h1>
   <form>
-    ID : <input type="text" id="email"><br>
-    PW : <input type="password" id="password"><br><br>
-    <button type="button" id="btn-login">로그인</button>
-    <button type="button" id="btn-tokenRegenerate">토큰갱신</button>
-    <a role="button" th:href="@{/member/join}">회원가입</a>
+    EMAIL : <input type="text" id="email"><br>
+    PW : <input type="password" id="password"><br>
+    NickName : <input type="text" id= "nickname"><br>
+
+    <button type="button" id="btn-join">회원가입</button>
   </form>
+
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
   <!--index.js 추가-->
   <script type="text/javascript" th:src="@{/js/app/index.js}"></script>
 </body>
