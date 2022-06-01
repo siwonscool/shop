@@ -2,16 +2,25 @@ package com.sample.shop.config.jwt;
 
 import com.sample.shop.config.security.CustomUserDetailService;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.SessionTrackingMode;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,7 +30,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 //OncePerRequestFilter 말고 앞전에 쓴 필터도 있는데 차이점
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter{
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailService customUserDetailService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
@@ -80,4 +89,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
+
+
 }

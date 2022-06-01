@@ -60,6 +60,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/admin/**").hasRole("ADMIN")
             .antMatchers("/user/**").hasRole("USER")
             .antMatchers("/**").permitAll() //나머지 요청은 누구나 접근가능
+            .anyRequest().hasRole("USER")
 
             .and()
             .exceptionHandling()
