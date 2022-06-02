@@ -82,7 +82,8 @@ public class TokenLoginService implements LoginService {
         logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken,username,remainMilliSecond));
     }
 
-    public TokenResponseDto regeneration(String refreshToken) {
+    //이부분을 Aop Annotation 으로 뺴고 싶었지만 @interface 에는 변수를 넣을수 없다고 한다... 방법이 없을까..ㅠ
+   public TokenResponseDto regeneration(String refreshToken) {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();
         log.info("username : " + username);
@@ -95,13 +96,6 @@ public class TokenLoginService implements LoginService {
     }
 
     public String getCurrentUsername() {
-        /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("auth name : "+ authentication.getName());
         UserDetails principal = (UserDetails) authentication.getPrincipal();

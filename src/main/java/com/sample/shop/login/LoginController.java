@@ -6,6 +6,7 @@ import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
+import com.sample.shop.shared.annotation.LoginCheck;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +40,9 @@ public class LoginController {
 
     //"로그아웃이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 삭제(expire상태) 되어야 한다."
     @PostMapping("/logout")
-    public void logout(@RequestHeader("Authorization") String accessToken, @RequestHeader("RefreshToken") String refreshToken){
+    public void logout(@RequestHeader("Authorization") String accessToken, @RequestHeader("RefreshToken") String refreshTokenRequest){
         String username = jwtTokenProvider.getUsername(resolveToken(accessToken));
-        tokenLoginService.logout(TokenResponseDto.of(accessToken,refreshToken),username);
+        tokenLoginService.logout(TokenResponseDto.of(accessToken,refreshTokenRequest),username);
     }
 
     private String resolveToken(String accessToken) {
