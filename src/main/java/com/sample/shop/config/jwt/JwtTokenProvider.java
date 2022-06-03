@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -61,7 +62,7 @@ public class JwtTokenProvider {
             .setClaims(claims)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expireTime))
-            .signWith(getSigningKey(secretKey),SignatureAlgorithm.HS256)
+            .signWith(getSigningKey(secretKey), SignatureAlgorithm.HS256)
             .compact();
     }
 

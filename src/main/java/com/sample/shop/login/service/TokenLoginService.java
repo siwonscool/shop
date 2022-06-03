@@ -12,7 +12,9 @@ import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
 import java.util.NoSuchElementException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,7 +39,8 @@ public class TokenLoginService implements LoginService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public TokenResponseDto login(final LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public TokenResponseDto login(final LoginRequestDto loginRequestDto, HttpServletRequest request,
+        HttpServletResponse response) {
         Member member = memberRepository.findByEmail(loginRequestDto.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 e-mail 입니다."));
 
@@ -45,6 +48,10 @@ public class TokenLoginService implements LoginService {
         String username = member.getUsername();
         String accessToken = jwtTokenProvider.generateAccessToken(username);
         RefreshToken refreshToken = saveRefreshToken(username);
+
+        Cookie cookie = new Cookie("refreshToken", refreshToken.getRefreshToken());
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
 
         log.info(this.getClientIp(request));
         log.info(member.getEmail());
@@ -66,7 +73,7 @@ public class TokenLoginService implements LoginService {
             REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
     }
 
-    private String getClientIp(HttpServletRequest request){
+    private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null) {
             ip = request.getRemoteAddr();
@@ -79,11 +86,12 @@ public class TokenLoginService implements LoginService {
         String accessToken = resolveToken(tokenResponseDto.getAccessToken());
         long remainMilliSecond = jwtTokenProvider.getRemainMilliSeconds(accessToken);
         refreshTokenRedisRepository.deleteById(username);
-        logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken,username,remainMilliSecond));
+        logoutAccessTokenRedisRepository.save(
+            LogoutAccessToken.of(accessToken, username, remainMilliSecond));
     }
 
     //이부분을 Aop Annotation 으로 뺴고 싶었지만 @interface 에는 변수를 넣을수 없다고 한다... 방법이 없을까..ㅠ
-   public TokenResponseDto regeneration(String refreshToken) {
+    public TokenResponseDto regeneration(String refreshToken) {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();
         log.info("username : " + username);
@@ -97,7 +105,7 @@ public class TokenLoginService implements LoginService {
 
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("auth name : "+ authentication.getName());
+        log.info("auth name : " + authentication.getName());
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         return principal.getUsername();
     }

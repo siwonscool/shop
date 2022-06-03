@@ -7,6 +7,7 @@ import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,18 @@ public class LoginController {
     //Oauth 방식으로 구현하려면 로그인도 토큰으로
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(
-        @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request) {
-        return ResponseEntity.ok(tokenLoginService.login(loginRequestDto,request));
+        @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request,
+        HttpServletResponse response) {
+        return ResponseEntity.ok(tokenLoginService.login(loginRequestDto, request, response));
     }
 
     //"로그아웃이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 삭제(expire상태) 되어야 한다."
     @PostMapping("/logout")
-    public void logout(@RequestHeader("Authorization") String accessToken, @RequestHeader("RefreshToken") String refreshTokenRequest){
+    public void logout(@RequestHeader("Authorization") String accessToken,
+        @RequestHeader("RefreshToken") String refreshTokenRequest) {
         String username = jwtTokenProvider.getUsername(accessToken);
-        tokenLoginService.logout(TokenResponseDto.of(accessToken,refreshTokenRequest),username);
+        tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username);
     }
-
 
 
 }
