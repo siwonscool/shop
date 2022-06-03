@@ -49,9 +49,13 @@ public class TokenLoginService implements LoginService {
         String accessToken = jwtTokenProvider.generateAccessToken(username);
         RefreshToken refreshToken = saveRefreshToken(username);
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken.getRefreshToken());
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken.getRefreshToken());
+        Cookie accessCookie = new Cookie("accessToken", accessToken);
+        refreshCookie.setHttpOnly(true);
+        accessCookie.setHttpOnly(true);
+
+        response.addCookie(refreshCookie);
+        response.addCookie(accessCookie);
 
         log.info(this.getClientIp(request));
         log.info(member.getEmail());
