@@ -1,11 +1,17 @@
 package com.sample.shop.config.jwt;
 
 import com.sample.shop.config.security.CustomUserDetailService;
+import com.sample.shop.login.domain.RefreshToken;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
+import com.sample.shop.login.domain.repository.RefreshTokenRedisRepository;
+import com.sample.shop.login.dto.LoginRequestDto;
+import com.sample.shop.login.dto.TokenResponseDto;
+import com.sample.shop.login.service.TokenLoginService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,6 +31,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Slf4j
 @Component
@@ -34,27 +42,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailService customUserDetailService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+    private final TokenLoginService tokenLoginService;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        // if 무시하고 지나가야하는 url 만나면 return
+
+        ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(request);
+        ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(response);
+        String requestUri = request.getRequestURI();
         String accessToken = getToken(request);
+
         if (accessToken != null) {
             checkLogout(accessToken);
             String username = jwtTokenProvider.getUsername(accessToken);
             log.info("현재 토큰의 username : " + username);
             if (username != null) {
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
-                equalsUsernameFromTokenAndUserDetails(userDetails.getUsername(), username);
+                equalsUsernameFromToken(userDetails.getUsername(), username);
                 validateAccessToken(accessToken, userDetails);
                 processSecurity(request, userDetails);
             }
         }
         filterChain.doFilter(request, response);
 
-        // 여기에는 response 응답객체 (에러메세지 http 상태코드)
+        if (requestUri.equals("/login")){
+            filterChain.doFilter(req, res);
+            // 로그인 로직을 여기서 해결??
+        }
     }
 
     //헤더에서 JWT 를 'Bearer' 를 제외하여 가져오고 프론트에서 JWT 를 주지 않는 경우 null 을 반환
@@ -72,7 +89,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         }
     }
 
-    private void equalsUsernameFromTokenAndUserDetails(String userDetailsUser, String tokenUserName) {
+    private void equalsUsernameFromToken(String userDetailsUser, String tokenUserName) {
         if (!userDetailsUser.equals(tokenUserName)){
             throw new IllegalArgumentException("username 과 토큰이 일치하지 않습니다.");
         }
