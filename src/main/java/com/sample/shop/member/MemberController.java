@@ -7,6 +7,8 @@ import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.member.dto.MemberInfoResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
+import com.sample.shop.shared.annotation.LoginCheck;
+import com.sample.shop.shared.annotation.LoginCheck.MemberType;
 import com.sample.shop.shared.exception.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +68,7 @@ public class MemberController {
 
     //"등록된 회원에 한하여 회원 탈퇴가 가능해야 한다. 탈퇴가 되면 삭제가 아닌 상태를 (WITHDRAWAL)로 변경해야 한다."
     @DeleteMapping("/delete/{id}")
+    @LoginCheck(type = MemberType.USER)
     public Long deleteMember(@PathVariable final Long id) {
         memberServiceImpl.updateMemberStatusWithdrawal(id);
         return id;
@@ -73,12 +76,14 @@ public class MemberController {
 
     //회원정보 조회
     @GetMapping("/{email}")
+    @LoginCheck(type = MemberType.USER)
     public MemberInfoResponseDto getMemberAdaptor(@PathVariable String email) {
         return memberServiceImpl.getMemberInfo(email);
     }
 
     //토큰 재발급
     @PostMapping("/regenerate")
+    @LoginCheck(type = MemberType.USER)
     public ResponseEntity<TokenResponseDto> regenerateToken(
         @RequestHeader("RefreshToken") String refreshToken) {
         log.info("refreshToken : " + refreshToken);

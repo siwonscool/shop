@@ -110,6 +110,8 @@ public class TokenLoginService implements LoginService {
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("auth name : " + authentication.getName());
+        log.info("user auth : " + authentication.getAuthorities());
+
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         return principal.getUsername();
     }

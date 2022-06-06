@@ -26,15 +26,6 @@ public class CustomUserDetails implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    /*@Builder
-    public CustomUserDetails(String username, String password,
-        List<String> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }*/
-
-
     public static UserDetails of(Member member) {
         return CustomUserDetails.builder()
             .username(member.getUsername())
