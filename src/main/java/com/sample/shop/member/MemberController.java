@@ -1,22 +1,21 @@
 package com.sample.shop.member;
 
-import com.sample.shop.config.security.CustomUserDetails;
 import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.member.dto.MemberInfoResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
+import com.sample.shop.shared.advice.ErrorCode;
 import com.sample.shop.shared.annotation.LoginCheck;
 import com.sample.shop.shared.annotation.LoginCheck.MemberType;
-import com.sample.shop.shared.exception.EmailDuplicateException;
+import com.sample.shop.shared.advice.exception.EmailDuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,16 +39,10 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
-        try {
-            if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
-                return new ResponseEntity(new EmailDuplicateException("중복되는 이메일이 존재합니다."),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                return ResponseEntity.ok(memberServiceImpl.save(memberInfoRequestDto));
-            }
-        } catch (Exception e) {
-            return new ResponseEntity(new EmptyJsonResponseDto(e.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
+            throw new EmailDuplicateException(ErrorCode.EMAIL_DUPLICATE);
+        } else {
+            return ResponseEntity.ok(memberServiceImpl.save(memberInfoRequestDto));
         }
     }
 
