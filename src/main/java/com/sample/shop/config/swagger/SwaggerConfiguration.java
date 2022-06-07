@@ -47,8 +47,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport{
             .globalOperationParameters(globalParameters)
             .apiInfo(apiInfo())
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.sample.shop.member"))
-            //.apis(RequestHandlerSelectors.basePackage("com.sample.shop.login"))
+            .apis(RequestHandlerSelectors.basePackage("com.sample.shop"))
             .paths(PathSelectors.any())
             .build();
     }
