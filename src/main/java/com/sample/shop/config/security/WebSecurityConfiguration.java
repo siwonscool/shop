@@ -22,6 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    private static final String[] SWAGGER_LIST={
+        "/v2/api-docs",
+        "/swagger-resources/**",
+        "/swagger-ui.html/**",
+        "/webjars/**"
+    };
 
     private final JwtEntryPoint jwtEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -43,9 +49,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web){
+    public void configure(WebSecurity web) {
         if (isLocalMode()) {
-            web.ignoring().antMatchers("/h2-console/**", "/favicon.ico");
+            web.ignoring()
+                .antMatchers("/h2-console/**", "/favicon.ico");
         }
     }
 
@@ -53,23 +60,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .cors()
-
             .and()
             .csrf().disable()
+            .authorizeRequests()
+            .antMatchers(SWAGGER_LIST).permitAll()
+            .and()
             .authorizeRequests()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .antMatchers("/user/**").hasRole("USER")
             .antMatchers("/**").permitAll() //나머지 요청은 누구나 접근가능
             .anyRequest().hasRole("USER")
-
             .and()
             .exceptionHandling()
             .authenticationEntryPoint(jwtEntryPoint)
-
             .and()
             .logout().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;

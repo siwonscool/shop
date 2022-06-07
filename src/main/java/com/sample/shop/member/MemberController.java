@@ -10,6 +10,8 @@ import com.sample.shop.shared.advice.ErrorCode;
 import com.sample.shop.shared.annotation.LoginCheck;
 import com.sample.shop.shared.annotation.LoginCheck.MemberType;
 import com.sample.shop.shared.advice.exception.EmailDuplicateException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = {"1. Member"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping(value = "/member", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -36,6 +39,7 @@ public class MemberController {
 
     //"회원가입을 처리한다. 성공적으로 처리되면 HttpStatus 201이 나와야 하며 member의 id값이 null이 아니여야 한며 member의 상태는 대기중(READY) 이여야 한다."
     //"회원 가입시에 email 중복 체크 기능이 있어야 한다. 중복일경우 Duplicate Exception이 발생하며 API Response 에 그 내용이 기술되어야 한다. (이유, 오류 메시지)"
+    @ApiOperation(value = "회원가입", notes = "노트노트")
     @PostMapping("/join")
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {

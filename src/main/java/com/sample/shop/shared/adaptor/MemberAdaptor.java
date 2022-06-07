@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
 @JsonInclude(Include.NON_NULL)
+@Getter
 public class MemberAdaptor {
     private Long id;
     private String username;
