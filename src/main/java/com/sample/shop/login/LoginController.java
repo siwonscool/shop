@@ -8,6 +8,8 @@ import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.shared.annotation.LoginCheck;
 import com.sample.shop.shared.annotation.LoginCheck.MemberType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = {"2. Login"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -31,9 +34,7 @@ public class LoginController {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenLoginService tokenLoginService;
 
-    //"로그인이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 생성되야야 한다."
-    //"로그인을 할때 로그인 기록을 남겨야 한다. 로그인 기록은 ClientIP, id, 로그인 성공 여부"
-    //Oauth 방식으로 구현하려면 로그인도 토큰으로
+    @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 입력받아 로그인한후 토큰을 쿠키에담아 발급한다.")
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(
         @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request,
@@ -42,12 +43,13 @@ public class LoginController {
     }
 
     //"로그아웃이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 삭제(expire상태) 되어야 한다."
+    @ApiOperation(value = "로그아웃", notes = "토큰을 입력받아 토큰을 삭제하고 로그아웃 토큰을 쿠키에담아 발급한다.")
     @PostMapping("/logout")
     @LoginCheck(type = MemberType.USER)
     public void logout(@RequestHeader("Authorization") String accessToken,
-        @RequestHeader("RefreshToken") String refreshTokenRequest) {
+        @RequestHeader("RefreshToken") String refreshTokenRequest, HttpServletResponse response) {
         String username = jwtTokenProvider.getUsername(accessToken);
-        tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username);
+        tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username, response);
     }
 
 

@@ -1,6 +1,7 @@
 package com.sample.shop.login.dto;
 
 import com.sample.shop.config.jwt.JwtHeaderUtilEnums;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TokenResponseDto {
+    @ApiModelProperty(example = "JWT 타입 / Bearer")
     private String grantType;
+    @ApiModelProperty(example = "accessToken")
     private String accessToken;
+    @ApiModelProperty(example = "refreshToken")
     private String refreshToken;
 
     @Builder

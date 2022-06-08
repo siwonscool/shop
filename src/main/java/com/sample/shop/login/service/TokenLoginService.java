@@ -53,7 +53,6 @@ public class TokenLoginService implements LoginService {
         Cookie accessCookie = new Cookie("accessToken", accessToken);
         refreshCookie.setHttpOnly(true);
         accessCookie.setHttpOnly(true);
-
         response.addCookie(refreshCookie);
         response.addCookie(accessCookie);
 
@@ -86,15 +85,17 @@ public class TokenLoginService implements LoginService {
     }
 
     @CacheEvict(value = CacheKey.USER, key = "#username")
-    public void logout(TokenResponseDto tokenResponseDto, String username) {
+    public void logout(TokenResponseDto tokenResponseDto, String username, HttpServletResponse response) {
         String accessToken = resolveToken(tokenResponseDto.getAccessToken());
         long remainMilliSecond = jwtTokenProvider.getRemainMilliSeconds(accessToken);
         refreshTokenRedisRepository.deleteById(username);
+        Cookie cookie = new Cookie("accessToken",accessToken);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
         logoutAccessTokenRedisRepository.save(
             LogoutAccessToken.of(accessToken, username, remainMilliSecond));
     }
 
-    //이부분을 Aop Annotation 으로 뺴고 싶었지만 @interface 에는 변수를 넣을수 없다고 한다... 방법이 없을까..ㅠ
     public TokenResponseDto regeneration(String refreshToken) {
         refreshToken = resolveToken(refreshToken);
         String username = getCurrentUsername();

@@ -2,7 +2,6 @@ package com.sample.shop.member;
 
 import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
-import com.sample.shop.member.dto.EmptyJsonResponseDto;
 import com.sample.shop.member.dto.MemberInfoRequestDto;
 import com.sample.shop.member.dto.MemberInfoResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
@@ -15,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,9 +35,7 @@ public class MemberController {
     private final MemberServiceImpl memberServiceImpl;
     private final TokenLoginService tokenLoginService;
 
-    //"회원가입을 처리한다. 성공적으로 처리되면 HttpStatus 201이 나와야 하며 member의 id값이 null이 아니여야 한며 member의 상태는 대기중(READY) 이여야 한다."
-    //"회원 가입시에 email 중복 체크 기능이 있어야 한다. 중복일경우 Duplicate Exception이 발생하며 API Response 에 그 내용이 기술되어야 한다. (이유, 오류 메시지)"
-    @ApiOperation(value = "회원가입", notes = "노트노트")
+    @ApiOperation(value = "회원가입", notes = "이메일, 비밀번호, 닉네임을 입력해 회원가입 한다.")
     @PostMapping("/join")
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
@@ -50,20 +46,20 @@ public class MemberController {
         }
     }
 
-    //admin 회원가입
+    @ApiOperation(value = "관리자 회원가입", notes = "이메일, 비밀번호, 닉네임을 입력해 회원가입 한다.")
     @PostMapping("/join/admin")
     public String joinAdmin(@RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
         memberServiceImpl.joinAdmin(memberInfoRequestDto);
         return "어드민 회원 가입 완료";
     }
 
-    //"회원가입후 가입대기중인 회원을 대상으로 회원상태를 활성(ACTIVATE) 상태로 바뀌어야 한다."
+    @ApiOperation(value = "회원상태 활성화", notes = "회원의 id로 회원가입한 회원의 상태를 활성(ACTIVATE)으로 바꾼다.")
     @PostMapping("/update/status/{id}")
     public void updateMemberStatus(@PathVariable final Long id) {
         memberServiceImpl.updateMemberStatusActivate(id);
     }
 
-    //"등록된 회원에 한하여 회원 탈퇴가 가능해야 한다. 탈퇴가 되면 삭제가 아닌 상태를 (WITHDRAWAL)로 변경해야 한다."
+    @ApiOperation(value = "회원탈퇴", notes = "회원의 id로 회원가입한 회원의 상태를 탈퇴(WITHDRAWAL)로 바꾼다.")
     @DeleteMapping("/delete/{id}")
     @LoginCheck(type = MemberType.USER)
     public Long deleteMember(@PathVariable final Long id) {
@@ -71,14 +67,14 @@ public class MemberController {
         return id;
     }
 
-    //회원정보 조회
+    @ApiOperation(value = "회원정보 조회", notes = "회원의 email 로 회원가입한 회원의 정보를 받는다.")
     @GetMapping("/{email}")
     @LoginCheck(type = MemberType.USER)
     public MemberInfoResponseDto getMemberAdaptor(@PathVariable String email) {
         return memberServiceImpl.getMemberInfo(email);
     }
 
-    //토큰 재발급
+    @ApiOperation(value = "토큰 재발급", notes = "토큰이 만료되면 토큰을 재발급 한다.")
     @PostMapping("/regenerate")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<TokenResponseDto> regenerateToken(
