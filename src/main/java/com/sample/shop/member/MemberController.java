@@ -2,22 +2,25 @@ package com.sample.shop.member;
 
 import com.sample.shop.login.dto.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
-import com.sample.shop.member.dto.MemberInfoRequestDto;
-import com.sample.shop.member.dto.MemberInfoResponseDto;
+import com.sample.shop.member.dto.request.MemberInfoRequestDto;
+import com.sample.shop.member.dto.response.MemberInfoResponseDto;
+import com.sample.shop.member.dto.response.MemberUpdateResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
 import com.sample.shop.shared.advice.ErrorCode;
 import com.sample.shop.shared.annotation.LoginCheck;
-import com.sample.shop.shared.annotation.LoginCheck.MemberType;
 import com.sample.shop.shared.advice.exception.EmailDuplicateException;
+import com.sample.shop.shared.enumeration.MemberType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,36 +45,39 @@ public class MemberController {
         if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
             throw new EmailDuplicateException(ErrorCode.EMAIL_DUPLICATE);
         } else {
-            return ResponseEntity.ok(memberServiceImpl.save(memberInfoRequestDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(memberServiceImpl.save(memberInfoRequestDto));
         }
     }
 
-    @ApiOperation(value = "관리자 회원가입", notes = "이메일, 비밀번호, 닉네임을 입력해 회원가입 한다.")
+    @ApiOperation(value = "관리자 회원가입", notes = "기능구현 x")
     @PostMapping("/join/admin")
-    public String joinAdmin(@RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
+    public ResponseEntity<String> joinAdmin(
+        @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
         memberServiceImpl.joinAdmin(memberInfoRequestDto);
-        return "어드민 회원 가입 완료";
+        return ResponseEntity.status(HttpStatus.CREATED).body("관리자 회원가입 완료");
     }
 
     @ApiOperation(value = "회원상태 활성화", notes = "회원의 id로 회원가입한 회원의 상태를 활성(ACTIVATE)으로 바꾼다.")
-    @PostMapping("/update/status/{id}")
-    public void updateMemberStatus(@PathVariable final Long id) {
-        memberServiceImpl.updateMemberStatusActivate(id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<MemberUpdateResponseDto> updateMemberStatus(@PathVariable Long id) {
+        boolean result = memberServiceImpl.updateMemberStatusActivate(id);
+        return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
     }
 
     @ApiOperation(value = "회원탈퇴", notes = "회원의 id로 회원가입한 회원의 상태를 탈퇴(WITHDRAWAL)로 바꾼다.")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @LoginCheck(type = MemberType.USER)
-    public Long deleteMember(@PathVariable final Long id) {
-        memberServiceImpl.updateMemberStatusWithdrawal(id);
-        return id;
+    public ResponseEntity<MemberUpdateResponseDto> deleteMember(@PathVariable Long id) {
+        boolean result = memberServiceImpl.updateMemberStatusWithdrawal(id);
+        return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
     }
 
     @ApiOperation(value = "회원정보 조회", notes = "회원의 email 로 회원가입한 회원의 정보를 받는다.")
     @GetMapping("/{email}")
     @LoginCheck(type = MemberType.USER)
-    public MemberInfoResponseDto getMemberAdaptor(@PathVariable String email) {
-        return memberServiceImpl.getMemberInfo(email);
+    public ResponseEntity<MemberInfoResponseDto> getMemberAdaptor(@PathVariable String email) {
+        MemberInfoResponseDto memberInfoResponseDto = memberServiceImpl.getMemberInfo(email);
+        return ResponseEntity.status(HttpStatus.OK).body(memberInfoResponseDto);
     }
 
     @ApiOperation(value = "토큰 재발급", notes = "토큰이 만료되면 토큰을 재발급 한다.")

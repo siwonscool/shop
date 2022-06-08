@@ -3,7 +3,7 @@ package com.sample.shop.shared.aop;
 import com.sample.shop.config.jwt.JwtTokenProvider;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.shared.annotation.LoginCheck;
-import com.sample.shop.shared.annotation.LoginCheck.MemberType;
+import com.sample.shop.shared.enumeration.MemberType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,12 +22,19 @@ public class AuthCheckAspect {
 
     @Before("@annotation(com.sample.shop.shared.annotation.LoginCheck) && @annotation(target)")
     private void loginCheck(LoginCheck target){
-        if (MemberType.USER.equals(target.type())){
-            userLoginCheck();
-        }else if (MemberType.STORE.equals(target.type())){
-            storeLoginCheck();
-        }else if (MemberType.ADMIN.equals(target.type())){
-            adminLoginCheck();
+        String memberType = target.toString();
+        switch (memberType) {
+            case "USER":
+                userLoginCheck();
+                break;
+            case "STORE":
+                storeLoginCheck();
+                break;
+            case "ADMIN":
+                adminLoginCheck();
+                break;
+            default:
+                break;
         }
     }
 

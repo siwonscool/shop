@@ -19,6 +19,4 @@ public class EmailDuplicateException extends RuntimeException{
         super(message);
         this.errorCode = errorCode;
     }
-
-
 }

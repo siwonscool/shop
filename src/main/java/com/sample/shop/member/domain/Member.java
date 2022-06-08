@@ -1,6 +1,6 @@
 package com.sample.shop.member.domain;
 
-import com.sample.shop.member.dto.MemberInfoRequestDto;
+import com.sample.shop.member.dto.request.MemberInfoRequestDto;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

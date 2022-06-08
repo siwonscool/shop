@@ -1,4 +1,4 @@
-package com.sample.shop.member.dto;
+package com.sample.shop.member.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
