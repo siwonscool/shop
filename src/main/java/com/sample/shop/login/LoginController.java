@@ -1,8 +1,9 @@
 package com.sample.shop.login;
 
 import com.sample.shop.config.jwt.JwtTokenProvider;
-import com.sample.shop.login.dto.LoginRequestDto;
-import com.sample.shop.login.dto.TokenResponseDto;
+import com.sample.shop.login.dto.request.LoginRequestDto;
+import com.sample.shop.login.dto.response.LogoutResponseDto;
+import com.sample.shop.login.dto.response.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.shared.annotation.LoginCheck;
 import com.sample.shop.shared.enumeration.MemberType;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,17 +38,17 @@ public class LoginController {
     public ResponseEntity<TokenResponseDto> login(
         @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request,
         HttpServletResponse response) {
-        return ResponseEntity.ok(tokenLoginService.login(loginRequestDto, request, response));
+        return ResponseEntity.status(HttpStatus.OK).body(tokenLoginService.login(loginRequestDto, request, response));
     }
 
-    //"로그아웃이 되어야한다. 성공적으로 처리되면 HttpStatus 200이 나와야 하며 Token값이 삭제(expire상태) 되어야 한다."
     @ApiOperation(value = "로그아웃", notes = "토큰을 입력받아 토큰을 삭제하고 로그아웃 토큰을 쿠키에담아 발급한다.")
     @PostMapping("/logout")
     @LoginCheck(type = MemberType.USER)
-    public void logout(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<LogoutResponseDto> logout(@RequestHeader("Authorization") String accessToken,
         @RequestHeader("RefreshToken") String refreshTokenRequest, HttpServletResponse response) {
         String username = jwtTokenProvider.getUsername(accessToken);
-        tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username, response);
+        boolean result = tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username, response);
+        return ResponseEntity.status(HttpStatus.OK).body(LogoutResponseDto.of(result));
     }
 
 

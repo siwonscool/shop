@@ -1,6 +1,6 @@
 package com.sample.shop.member;
 
-import com.sample.shop.login.dto.TokenResponseDto;
+import com.sample.shop.login.dto.response.TokenResponseDto;
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.dto.request.MemberInfoRequestDto;
 import com.sample.shop.member.dto.response.MemberInfoResponseDto;

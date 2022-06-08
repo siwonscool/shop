@@ -7,8 +7,8 @@ import com.sample.shop.login.domain.LogoutAccessToken;
 import com.sample.shop.login.domain.RefreshToken;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
 import com.sample.shop.login.domain.repository.RefreshTokenRedisRepository;
-import com.sample.shop.login.dto.LoginRequestDto;
-import com.sample.shop.login.dto.TokenResponseDto;
+import com.sample.shop.login.dto.request.LoginRequestDto;
+import com.sample.shop.login.dto.response.TokenResponseDto;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.repository.MemberRepository;
 import java.util.NoSuchElementException;
@@ -85,7 +85,7 @@ public class TokenLoginService implements LoginService {
     }
 
     @CacheEvict(value = CacheKey.USER, key = "#username")
-    public void logout(TokenResponseDto tokenResponseDto, String username, HttpServletResponse response) {
+    public boolean logout(TokenResponseDto tokenResponseDto, String username, HttpServletResponse response) {
         String accessToken = resolveToken(tokenResponseDto.getAccessToken());
         long remainMilliSecond = jwtTokenProvider.getRemainMilliSeconds(accessToken);
         refreshTokenRedisRepository.deleteById(username);
@@ -94,6 +94,7 @@ public class TokenLoginService implements LoginService {
         response.addCookie(cookie);
         logoutAccessTokenRedisRepository.save(
             LogoutAccessToken.of(accessToken, username, remainMilliSecond));
+        return true;
     }
 
     public TokenResponseDto regeneration(String refreshToken) {

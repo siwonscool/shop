@@ -1,4 +1,4 @@
-package com.sample.shop.login.dto;
+package com.sample.shop.login.dto.response;
 
 import com.sample.shop.config.jwt.JwtHeaderUtilEnums;
 import io.swagger.annotations.ApiModelProperty;
