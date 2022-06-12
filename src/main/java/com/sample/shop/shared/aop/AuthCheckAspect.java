@@ -17,7 +17,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthCheckAspect {
-    private final JwtTokenProvider jwtTokenProvider;
     private final TokenLoginService tokenLoginService;
 
     @Before("@annotation(com.sample.shop.shared.annotation.LoginCheck) && @annotation(target)")

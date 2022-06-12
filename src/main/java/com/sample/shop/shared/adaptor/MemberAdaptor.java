@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.sample.shop.member.domain.Authority;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.MemberStatus;
+import com.sample.shop.post.domain.Post;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class MemberAdaptor {
     private MemberStatus memberStatus;
     private List<String> roles = new ArrayList<>();
     private Set<Authority> authorities;
+    private List<Post> posts = new ArrayList<>();
 
     @Setter
     private String errorMessage;
@@ -31,7 +33,7 @@ public class MemberAdaptor {
     @Builder
     private MemberAdaptor(Long id, String username, String email, String password,
         MemberStatus memberStatus, List<String> roles,
-        Set<Authority> authorities, String errorMessage) {
+        Set<Authority> authorities, String errorMessage,List<Post> posts) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -40,6 +42,7 @@ public class MemberAdaptor {
         this.roles = roles;
         this.authorities = authorities;
         this.errorMessage = errorMessage;
+        this.posts = posts;
     }
 
     public static MemberAdaptor of(Member member){
@@ -49,6 +52,7 @@ public class MemberAdaptor {
             .password(member.getPassword())
             .memberStatus(member.getMemberStatus())
             .roles(member.getRoles())
+            .posts(member.getPost())
             .build();
     }
 }

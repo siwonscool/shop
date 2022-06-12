@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reactor.util.annotation.Nullable;
 
 @Entity
 @Getter
@@ -32,9 +33,10 @@ public class Post extends BaseTimeEntity{
     @Column(name = "PRODUCT_ID")
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private String category;
 
     @Enumerated(EnumType.STRING)
