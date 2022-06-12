@@ -1,6 +1,8 @@
 package com.sample.shop.member.domain;
 
 import com.sample.shop.member.dto.request.MemberInfoRequestDto;
+import com.sample.shop.post.domain.Post;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +58,10 @@ public class Member{
     @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Authority> authorities = new HashSet<>();
+
+    @OneToMany(mappedBy = "author",cascade = ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Post> post = new ArrayList<>();
 
     public static Member ofUser(MemberInfoRequestDto memberInfoRequestDto) {
         Member member = Member.builder()
