@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import reactor.util.annotation.Nullable;
 
 @Entity
@@ -50,6 +51,7 @@ public class Post extends BaseTimeEntity{
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
+    @Setter
     private Member author;
 
     public void updatePost(PostRequestDto postRequestDto){

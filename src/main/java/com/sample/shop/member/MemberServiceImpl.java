@@ -68,7 +68,8 @@ public class MemberServiceImpl implements MemberService {
         return MemberAdaptor.of(member);
     }
 
-    public void joinAdmin(MemberInfoRequestDto memberInfoRequestDto) {
+    public boolean joinAdmin(MemberInfoRequestDto memberInfoRequestDto) {
+        return false;
     }
 
     public MemberInfoResponseDto getMemberInfo(String email) {
@@ -78,5 +79,9 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("회원정보가 일치하지 않습니다.");
         }
         return new MemberInfoResponseDto(member.getEmail(), member.getNickname());
+    }
+
+    public Member findByUsername(String username){
+        return memberRepository.findByUsername(username);
     }
 }

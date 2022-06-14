@@ -35,17 +35,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class MemberController {
 
-    private final MemberServiceImpl memberServiceImpl;
+    private final MemberService memberService;
     private final TokenLoginService tokenLoginService;
 
     @ApiOperation(value = "회원가입", notes = "이메일, 비밀번호, 닉네임을 입력해 회원가입 한다.")
     @PostMapping("/join")
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
-        if (!memberServiceImpl.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
+        if (!memberService.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
             throw new EmailDuplicateException(ErrorCode.EMAIL_DUPLICATE);
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(memberServiceImpl.save(memberInfoRequestDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(memberService.save(memberInfoRequestDto));
         }
     }
 
@@ -53,14 +53,14 @@ public class MemberController {
     @PostMapping("/join/admin")
     public ResponseEntity<String> joinAdmin(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
-        memberServiceImpl.joinAdmin(memberInfoRequestDto);
+        memberService.joinAdmin(memberInfoRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("관리자 회원가입 완료");
     }
 
     @ApiOperation(value = "회원상태 활성화", notes = "회원의 id로 회원가입한 회원의 상태를 활성(ACTIVATE)으로 바꾼다.")
     @PatchMapping("/{id}")
     public ResponseEntity<MemberUpdateResponseDto> updateMemberStatus(@PathVariable Long id) {
-        boolean result = memberServiceImpl.updateMemberStatusActivate(id);
+        boolean result = memberService.updateMemberStatusActivate(id);
         return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
     }
 
@@ -68,7 +68,7 @@ public class MemberController {
     @DeleteMapping("/{id}")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberUpdateResponseDto> deleteMember(@PathVariable Long id) {
-        boolean result = memberServiceImpl.updateMemberStatusWithdrawal(id);
+        boolean result = memberService.updateMemberStatusWithdrawal(id);
         return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
     }
 
@@ -76,7 +76,7 @@ public class MemberController {
     @GetMapping("/{email}")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberInfoResponseDto> getMemberAdaptor(@PathVariable String email) {
-        MemberInfoResponseDto memberInfoResponseDto = memberServiceImpl.getMemberInfo(email);
+        MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(email);
         return ResponseEntity.status(HttpStatus.OK).body(memberInfoResponseDto);
     }
 
