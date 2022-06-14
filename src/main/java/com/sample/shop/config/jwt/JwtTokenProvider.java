@@ -33,7 +33,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return extractAllClaims(this.resolveToken(token)).get("username", String.class);
+        return extractAllClaims(token).get("username", String.class);
     }
 
     private Key getSigningKey(String secretKey) {
@@ -76,9 +76,5 @@ public class JwtTokenProvider {
         Date expiration = extractAllClaims(token).getExpiration();
         Date now = new Date();
         return expiration.getTime() - now.getTime();
-    }
-
-    private String resolveToken(String accessToken) {
-        return accessToken.substring(7);
     }
 }

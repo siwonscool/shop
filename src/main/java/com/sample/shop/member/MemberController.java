@@ -59,6 +59,7 @@ public class MemberController {
 
     @ApiOperation(value = "회원상태 활성화", notes = "회원의 id로 회원가입한 회원의 상태를 활성(ACTIVATE)으로 바꾼다.")
     @PatchMapping("/{id}")
+    @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberUpdateResponseDto> updateMemberStatus(@PathVariable Long id) {
         boolean result = memberService.updateMemberStatusActivate(id);
         return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));

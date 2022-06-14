@@ -25,6 +25,5 @@ public class CustomUserDetailService implements UserDetailsService {
         Member member = memberRepository.findByUsernameWithAuthority(username)
             .orElseThrow(() -> new NoSuchElementException("등록되지 않은 회원입니다."));
         return CustomUserDetails.of(member);
-        //return new User(member.getUsername(), member.getPassword(),new ArrayList<>());
     }
 }

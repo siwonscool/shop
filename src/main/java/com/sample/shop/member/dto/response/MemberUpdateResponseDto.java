@@ -1,6 +1,8 @@
 package com.sample.shop.member.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberUpdateResponseDto {
+    @ApiModelProperty(example = "실행결과")
     private boolean result;
 
     @Builder

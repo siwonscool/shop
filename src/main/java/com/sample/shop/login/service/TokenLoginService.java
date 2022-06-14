@@ -18,12 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import static com.sample.shop.config.jwt.JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME;
 
@@ -111,9 +113,11 @@ public class TokenLoginService implements LoginService {
 
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("auth name : " + authentication.getName());
-        log.info("user auth : " + authentication.getAuthorities());
-
+        if (authentication.getName().equals("anonymousUser")){
+            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED,"No_Login") {};
+        }
+        log.debug("auth name : " + authentication.getName());
+        log.debug("user auth : " + authentication.getAuthorities());
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         return principal.getUsername();
     }

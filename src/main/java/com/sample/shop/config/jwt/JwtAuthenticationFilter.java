@@ -33,8 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(response);
+        //ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(request);
+        //ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(response);
         String requestUri = request.getRequestURI();
         String accessToken = getToken(request);
 
@@ -51,10 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
 
-        if (requestUri.equals("/login")) {
+        /*if (requestUri.equals("/login")) {
             filterChain.doFilter(req, res);
             // 로그인 로직을 여기서 해결??
-        }
+        }*/
     }
 
     //헤더에서 JWT 를 'Bearer' 를 제외하여 가져오고 프론트에서 JWT 를 주지 않는 경우 null 을 반환

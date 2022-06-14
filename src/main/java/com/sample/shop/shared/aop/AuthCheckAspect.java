@@ -21,13 +21,10 @@ public class AuthCheckAspect {
 
     @Before("@annotation(com.sample.shop.shared.annotation.LoginCheck) && @annotation(target)")
     private void loginCheck(LoginCheck target){
-        String memberType = target.toString();
+        String memberType = String.valueOf(target.type());
         switch (memberType) {
             case "USER":
                 userLoginCheck();
-                break;
-            case "STORE":
-                storeLoginCheck();
                 break;
             case "ADMIN":
                 adminLoginCheck();
@@ -42,9 +39,6 @@ public class AuthCheckAspect {
         if (username == null){
             throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED,"No_Login") {};
         }
-    }
-
-    private void storeLoginCheck() {
     }
 
     private void adminLoginCheck() {
