@@ -62,24 +62,21 @@ public class MemberController {
     @PatchMapping("/{id}")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberUpdateResponseDto> updateMemberStatus(@PathVariable Long id) {
-        boolean result = memberService.updateMemberStatusActivate(id);
-        return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
+        return ResponseEntity.ok(memberService.updateMemberStatusActivate(id));
     }
 
     @ApiOperation(value = "회원탈퇴", notes = "회원의 id로 회원가입한 회원의 상태를 탈퇴(WITHDRAWAL)로 바꾼다.")
     @DeleteMapping("/{id}")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberUpdateResponseDto> deleteMember(@PathVariable Long id) {
-        boolean result = memberService.updateMemberStatusWithdrawal(id);
-        return ResponseEntity.status(HttpStatus.OK).body(MemberUpdateResponseDto.of(result));
+        return ResponseEntity.ok(memberService.updateMemberStatusWithdrawal(id));
     }
 
     @ApiOperation(value = "회원정보 조회", notes = "회원의 email 로 회원가입한 회원의 정보를 받는다.")
     @GetMapping("/{email}")
     @LoginCheck(type = MemberType.USER)
     public ResponseEntity<MemberInfoResponseDto> getMemberAdaptor(@PathVariable String email) {
-        MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(email);
-        return ResponseEntity.status(HttpStatus.OK).body(memberInfoResponseDto);
+        return ResponseEntity.ok(memberService.getMemberInfo(email));
     }
 
     @ApiOperation(value = "토큰 재발급", notes = "토큰이 만료되면 토큰을 재발급 한다.")

@@ -6,6 +6,7 @@ import com.sample.shop.member.domain.MemberStatus;
 import com.sample.shop.member.domain.repository.MemberRepository;
 import com.sample.shop.member.dto.request.MemberInfoRequestDto;
 import com.sample.shop.member.dto.response.MemberInfoResponseDto;
+import com.sample.shop.member.dto.response.MemberUpdateResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,27 +32,27 @@ public class MemberServiceImpl implements MemberService {
         return convertMemberAdaptor(memberRepository.save(Member.ofUser(memberInfoRequestDto)));
     }
 
-    public boolean updateMemberStatusActivate(Long id) {
+    public MemberUpdateResponseDto updateMemberStatusActivate(Long id) {
         try {
             Member member = this.findById(id);
             member.updateMemberStatusActivate();
             Member memberFromDb = memberRepository.save(member);
-            return memberFromDb.getMemberStatus() == MemberStatus.ACTIVATE;
+            return MemberUpdateResponseDto.of(memberFromDb.getMemberStatus() == MemberStatus.ACTIVATE);
         } catch (Exception e) {
             log.error("회원정보 활성화에 실패했습니다. member id :{}", id, e);
-            return false;
+            return null;
         }
     }
 
-    public boolean updateMemberStatusWithdrawal(Long id) {
+    public MemberUpdateResponseDto updateMemberStatusWithdrawal(Long id) {
         try {
             Member member = this.findById(id);
             member.updateMemberStatusWithdrawal();
             Member memberFromDb = memberRepository.save(member);
-            return (memberFromDb.getMemberStatus() == MemberStatus.WITHDRAWAL);
+            return MemberUpdateResponseDto.of(memberFromDb.getMemberStatus() == MemberStatus.WITHDRAWAL);
         } catch (Exception e) {
             log.error("회원정보 삭제에 실패했습니다. member id :{}", id, e);
-            return false;
+            return null;
         }
     }
 
