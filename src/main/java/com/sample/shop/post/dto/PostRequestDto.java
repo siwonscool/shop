@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostRequestDto {
+
     private String title;
     private String content;
     private String category;
@@ -21,7 +22,7 @@ public class PostRequestDto {
         this.category = category;
     }
 
-    public Post toEntity(){
+    public Post toEntity() {
         return Post.builder()
             .title(title)
             .content(content)

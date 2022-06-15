@@ -45,7 +45,8 @@ public class MemberController {
         if (!memberService.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
             throw new EmailDuplicateException(ErrorCode.EMAIL_DUPLICATE);
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(memberService.save(memberInfoRequestDto));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                .body(memberService.save(memberInfoRequestDto));
         }
     }
 

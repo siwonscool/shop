@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @JsonInclude(Include.NON_NULL)
-public class EmailDuplicateException extends RuntimeException{
+public class EmailDuplicateException extends RuntimeException {
+
     private final ErrorCode errorCode;
 
     public EmailDuplicateException(ErrorCode errorCode) {

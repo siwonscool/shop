@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
 
     @ExceptionHandler(value = {EmailDuplicateException.class})
-    protected ResponseEntity<ErrorResponse> handleCustomException(EmailDuplicateException e){
+    protected ResponseEntity<ErrorResponse> handleCustomException(EmailDuplicateException e) {
         return ErrorResponse.toResponseEntity(e);
     }
 }

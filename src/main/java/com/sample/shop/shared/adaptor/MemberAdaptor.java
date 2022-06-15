@@ -18,6 +18,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @Getter
 public class MemberAdaptor {
+
     private Long id;
     private String username;
     private String email;
@@ -33,7 +34,7 @@ public class MemberAdaptor {
     @Builder
     private MemberAdaptor(Long id, String username, String email, String password,
         MemberStatus memberStatus, List<String> roles,
-        Set<Authority> authorities, String errorMessage,List<Post> posts) {
+        Set<Authority> authorities, String errorMessage, List<Post> posts) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -45,7 +46,7 @@ public class MemberAdaptor {
         this.posts = posts;
     }
 
-    public static MemberAdaptor of(Member member){
+    public static MemberAdaptor of(Member member) {
         return MemberAdaptor.builder()
             .id(member.getId())
             .email(member.getEmail())

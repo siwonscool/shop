@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class LogoutResponseDto {
+
     private boolean result;
 
     @Builder
@@ -12,7 +13,7 @@ public class LogoutResponseDto {
         this.result = result;
     }
 
-    public static LogoutResponseDto of(boolean result){
+    public static LogoutResponseDto of(boolean result) {
         return LogoutResponseDto.builder()
             .result(result)
             .build();

@@ -12,7 +12,7 @@ public class IndexController {
     }
 
     @GetMapping("/member/join")
-    public String join(){
+    public String join() {
         return "member/member-register";
     }
 }

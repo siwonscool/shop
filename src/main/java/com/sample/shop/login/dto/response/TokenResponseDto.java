@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TokenResponseDto {
+
     @ApiModelProperty(example = "JWT 타입 / Bearer")
     private String grantType;
     @ApiModelProperty(example = "accessToken")
@@ -25,7 +26,7 @@ public class TokenResponseDto {
         this.refreshToken = refreshToken;
     }
 
-    public static TokenResponseDto of(String accessToken, String refreshToken){
+    public static TokenResponseDto of(String accessToken, String refreshToken) {
         return TokenResponseDto.builder()
             .grantType(JwtHeaderUtilEnums.GRANT_TYPE.getValue())
             .accessToken(accessToken)

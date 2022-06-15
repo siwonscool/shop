@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberInfoResponseDto {
+
     @ApiModelProperty(example = "이메일")
     private String email;
     @ApiModelProperty(example = "닉네임")

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberUpdateResponseDto {
+
     @ApiModelProperty(example = "실행결과")
     private boolean result;
 
@@ -19,7 +20,7 @@ public class MemberUpdateResponseDto {
         this.result = result;
     }
 
-    public static MemberUpdateResponseDto of(boolean result){
+    public static MemberUpdateResponseDto of(boolean result) {
         return MemberUpdateResponseDto.builder()
             .result(result)
             .build();

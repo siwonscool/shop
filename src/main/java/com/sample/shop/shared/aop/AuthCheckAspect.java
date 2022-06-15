@@ -17,10 +17,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthCheckAspect {
+
     private final TokenLoginService tokenLoginService;
 
     @Before("@annotation(com.sample.shop.shared.annotation.LoginCheck) && @annotation(target)")
-    private void loginCheck(LoginCheck target){
+    private void loginCheck(LoginCheck target) {
         String memberType = String.valueOf(target.type());
         switch (memberType) {
             case "USER":
@@ -36,8 +37,9 @@ public class AuthCheckAspect {
 
     private void userLoginCheck() {
         String username = tokenLoginService.getCurrentUsername();
-        if (username == null){
-            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED,"No_Login") {};
+        if (username == null) {
+            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "No_Login") {
+            };
         }
     }
 

@@ -87,11 +87,12 @@ public class TokenLoginService implements LoginService {
     }
 
     @CacheEvict(value = CacheKey.USER, key = "#username")
-    public boolean logout(TokenResponseDto tokenResponseDto, String username, HttpServletResponse response) {
+    public boolean logout(TokenResponseDto tokenResponseDto, String username,
+        HttpServletResponse response) {
         String accessToken = resolveToken(tokenResponseDto.getAccessToken());
         long remainMilliSecond = jwtTokenProvider.getRemainMilliSeconds(accessToken);
         refreshTokenRedisRepository.deleteById(username);
-        Cookie cookie = new Cookie("accessToken",accessToken);
+        Cookie cookie = new Cookie("accessToken", accessToken);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
         logoutAccessTokenRedisRepository.save(
@@ -113,8 +114,9 @@ public class TokenLoginService implements LoginService {
 
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName().equals("anonymousUser")){
-            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED,"No_Login") {};
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "No_Login") {
+            };
         }
         log.debug("auth name : " + authentication.getName());
         log.debug("user auth : " + authentication.getAuthorities());

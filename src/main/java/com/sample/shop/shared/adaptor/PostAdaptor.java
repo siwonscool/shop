@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(Include.NON_NULL)
 @Getter
 public class PostAdaptor {
+
     private Long id;
     private String title;
     private Member author;
@@ -26,7 +27,8 @@ public class PostAdaptor {
 
     @Builder
     private PostAdaptor(Long id, String title, Member author, String content,
-        TradeStatus tradeStatus, String category, LocalDateTime createdTime, LocalDateTime modifiedTime) {
+        TradeStatus tradeStatus, String category, LocalDateTime createdTime,
+        LocalDateTime modifiedTime) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -37,7 +39,7 @@ public class PostAdaptor {
         this.modifiedTime = modifiedTime;
     }
 
-    public static PostAdaptor of(Post post){
+    public static PostAdaptor of(Post post) {
         return PostAdaptor.builder()
             .id(post.getId())
             .title(post.getTitle())

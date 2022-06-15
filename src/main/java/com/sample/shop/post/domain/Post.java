@@ -28,7 +28,8 @@ import reactor.util.annotation.Nullable;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @Builder
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "PRODUCT_ID")
@@ -54,13 +55,13 @@ public class Post extends BaseTimeEntity{
     @Setter
     private Member author;
 
-    public void updatePost(PostRequestDto postRequestDto){
+    public void updatePost(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
     }
 
-    public void removePost(){
+    public void removePost() {
         this.removed = true;
     }
 }

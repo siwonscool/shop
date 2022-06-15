@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostUpdateResponseDto {
+
     private boolean result;
 
     @Builder
@@ -18,7 +19,7 @@ public class PostUpdateResponseDto {
         this.result = result;
     }
 
-    public static PostUpdateResponseDto of(boolean result){
+    public static PostUpdateResponseDto of(boolean result) {
         return PostUpdateResponseDto.builder()
             .result(result)
             .build();

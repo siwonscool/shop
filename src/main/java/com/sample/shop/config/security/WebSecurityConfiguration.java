@@ -22,7 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final String[] SWAGGER_LIST={
+
+    private static final String[] SWAGGER_LIST = {
         "/v2/api-docs",
         "/swagger-resources/**",
         "/swagger-ui.html/**",

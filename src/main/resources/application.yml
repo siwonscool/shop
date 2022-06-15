@@ -2,11 +2,11 @@ devMode: local
 
 spring:
   #MySql config
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3305/new_schema?serverTimezone=UTC&characterEncoding=UTF-8
-#    username: test_user
-#    password: admin
+  #  datasource:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    url: jdbc:mysql://localhost:3305/new_schema?serverTimezone=UTC&characterEncoding=UTF-8
+  #    username: test_user
+  #    password: admin
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
@@ -30,7 +30,7 @@ spring:
     port: 6379
     host: localhost
 
-#Thymleaf prefix, suffix
+  #Thymleaf prefix, suffix
   #정적 리소스 변화있을시 바로 반영
   devtools:
     restart:

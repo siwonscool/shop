@@ -38,16 +38,19 @@ public class LoginController {
     public ResponseEntity<TokenResponseDto> login(
         @RequestBody final LoginRequestDto loginRequestDto, HttpServletRequest request,
         HttpServletResponse response) {
-        return ResponseEntity.status(HttpStatus.OK).body(tokenLoginService.login(loginRequestDto, request, response));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(tokenLoginService.login(loginRequestDto, request, response));
     }
 
     @ApiOperation(value = "로그아웃", notes = "토큰을 입력받아 토큰을 삭제하고 로그아웃 토큰을 쿠키에담아 발급한다.")
     @PostMapping("/logout")
     @LoginCheck(type = MemberType.USER)
-    public ResponseEntity<LogoutResponseDto> logout(@RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<LogoutResponseDto> logout(
+        @RequestHeader("Authorization") String accessToken,
         @RequestHeader("RefreshToken") String refreshTokenRequest, HttpServletResponse response) {
         String username = jwtTokenProvider.getUsername(accessToken);
-        boolean result = tokenLoginService.logout(TokenResponseDto.of(accessToken, refreshTokenRequest), username, response);
+        boolean result = tokenLoginService.logout(
+            TokenResponseDto.of(accessToken, refreshTokenRequest), username, response);
         return ResponseEntity.status(HttpStatus.OK).body(LogoutResponseDto.of(result));
     }
 

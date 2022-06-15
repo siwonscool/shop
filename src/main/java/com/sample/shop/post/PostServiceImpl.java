@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final TokenLoginService tokenLoginService;
@@ -25,14 +25,14 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public PostAdaptor createNewPost(PostRequestDto postRequestDto) {
-        try{
+        try {
             Post post = postRepository.save(postRequestDto.toEntity());
             String username = tokenLoginService.getCurrentUsername();
             Member member = memberServiceImpl.findByUsername(username);
             post.setAuthor(member);
             Post insertMemberPost = postRepository.save(post);
             return convertPostAdaptor(postRepository.save(insertMemberPost));
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("게시물 업로드에 실패하였습니다.");
             return null;
         }
@@ -41,10 +41,10 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public PostUpdateResponseDto updatePost(PostRequestDto postRequestDto, Long postId) {
-        try{
+        try {
             return null;
-        }catch (Exception e){
-            log.info("게시물 업데이트에 실패하였습니다. Post Id : {}",postId,e);
+        } catch (Exception e) {
+            log.info("게시물 업데이트에 실패하였습니다. Post Id : {}", postId, e);
             return null;
         }
     }

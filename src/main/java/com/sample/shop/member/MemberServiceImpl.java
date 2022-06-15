@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
         return new MemberInfoResponseDto(member.getEmail(), member.getNickname());
     }
 
-    public Member findByUsername(String username){
+    public Member findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
 }

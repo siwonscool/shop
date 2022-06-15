@@ -24,7 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 //@EnableWebMvc //세큐리티와 연결할때 404떠서 추가
 @EnableSwagger2
-public class SwaggerConfiguration extends WebMvcConfigurationSupport{
+public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
     private static final String API_NAME = "Study API";
     private static final String API_VERSION = "0.0.1";

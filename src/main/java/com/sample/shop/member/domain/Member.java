@@ -31,7 +31,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @Builder
-public class Member{
+public class Member {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -59,7 +59,7 @@ public class Member{
     @Builder.Default
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "author",cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> post = new ArrayList<>();
 
@@ -97,12 +97,12 @@ public class Member{
             .collect(toList());
     }
 
-    public Member updateMemberStatusActivate(){
+    public Member updateMemberStatusActivate() {
         this.memberStatus = MemberStatus.ACTIVATE;
         return this;
     }
 
-    public Member updateMemberStatusWithdrawal(){
+    public Member updateMemberStatusWithdrawal() {
         this.memberStatus = MemberStatus.WITHDRAWAL;
         return this;
     }

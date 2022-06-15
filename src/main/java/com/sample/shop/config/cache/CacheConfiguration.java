@@ -18,8 +18,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 @EnableCaching
 public class CacheConfiguration {
+
     @Bean
-    public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory){
+    public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
             .disableCachingNullValues()
             .entryTtl(Duration.ofSeconds(CacheKey.DEFAULT_EXPIRE_SEC))
@@ -30,7 +31,6 @@ public class CacheConfiguration {
             .serializeValuesWith(RedisSerializationContext
                 .SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer()));
-
 
         return RedisCacheManager.RedisCacheManagerBuilder
             .fromConnectionFactory(redisConnectionFactory)

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class ErrorResponse {
+
     private final LocalDateTime localDateTime = LocalDateTime.now();
     private final int status;
     private final String errorType;
@@ -26,7 +27,7 @@ public class ErrorResponse {
         this.description = description;
     }
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(EmailDuplicateException e){
+    public static ResponseEntity<ErrorResponse> toResponseEntity(EmailDuplicateException e) {
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
             .status(errorCode.getHttpStatus())
