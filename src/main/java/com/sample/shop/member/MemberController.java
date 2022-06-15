@@ -8,7 +8,7 @@ import com.sample.shop.member.dto.response.MemberUpdateResponseDto;
 import com.sample.shop.shared.adaptor.MemberAdaptor;
 import com.sample.shop.shared.advice.ErrorCode;
 import com.sample.shop.shared.annotation.LoginCheck;
-import com.sample.shop.shared.advice.exception.EmailDuplicateException;
+import com.sample.shop.shared.advice.exception.RestApiException;
 import com.sample.shop.shared.enumeration.MemberType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +43,7 @@ public class MemberController {
     public ResponseEntity<MemberAdaptor> join(
         @RequestBody final MemberInfoRequestDto memberInfoRequestDto) {
         if (!memberService.isDuplicateEmail(memberInfoRequestDto).isEmpty()) {
-            throw new EmailDuplicateException(ErrorCode.EMAIL_DUPLICATE);
+            throw new RestApiException(ErrorCode.EMAIL_DUPLICATE);
         } else {
             return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberService.save(memberInfoRequestDto));

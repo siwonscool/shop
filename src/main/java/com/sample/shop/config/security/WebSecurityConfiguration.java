@@ -1,7 +1,6 @@
 package com.sample.shop.config.security;
 
-import com.sample.shop.config.security.CustomUserDetailService;
-import com.sample.shop.config.jwt.JwtAuthenticationFilter;
+import com.sample.shop.config.filter.JwtAuthenticationFilter;
 import com.sample.shop.config.jwt.JwtEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

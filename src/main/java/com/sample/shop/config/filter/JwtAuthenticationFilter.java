@@ -1,5 +1,6 @@
-package com.sample.shop.config.jwt;
+package com.sample.shop.config.filter;
 
+import com.sample.shop.config.jwt.JwtTokenProvider;
 import com.sample.shop.config.security.CustomUserDetailService;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
 import java.io.IOException;
@@ -48,6 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 validateAccessToken(accessToken, userDetails);
                 processSecurity(request, userDetails);
             }
+        }else{
+
         }
         filterChain.doFilter(request, response);
 
