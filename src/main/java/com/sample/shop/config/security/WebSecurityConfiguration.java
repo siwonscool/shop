@@ -1,5 +1,6 @@
 package com.sample.shop.config.security;
 
+import com.sample.shop.config.filter.ExceptionHandlerFilter;
 import com.sample.shop.config.filter.JwtAuthenticationFilter;
 import com.sample.shop.config.jwt.JwtEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtEntryPoint jwtEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final CustomUserDetailService customUserDetailService;
 
     private final Environment env;
@@ -78,6 +80,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(exceptionHandlerFilter,JwtAuthenticationFilter.class)
         ;
     }
 
