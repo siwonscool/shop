@@ -1,5 +1,6 @@
 package com.sample.shop.config.jwt;
 
+import com.sample.shop.shared.advice.exception.UsernameFromTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,7 +34,11 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return extractAllClaims(token).get("username", String.class);
+        try{
+            return extractAllClaims(token).get("username", String.class);
+        }catch (Exception e){
+            throw new UsernameFromTokenException("username from token exception");
+        }
     }
 
     private Key getSigningKey(String secretKey) {

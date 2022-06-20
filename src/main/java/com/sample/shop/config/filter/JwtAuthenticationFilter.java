@@ -3,6 +3,8 @@ package com.sample.shop.config.filter;
 import com.sample.shop.config.jwt.JwtTokenProvider;
 import com.sample.shop.config.security.CustomUserDetailService;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
+import com.sample.shop.shared.advice.exception.UsernameFromTokenException;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,15 +36,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        //ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(request);
-        //ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(response);
-        String requestUri = request.getRequestURI();
         String accessToken = getToken(request);
+        String username = null;
 
         if (accessToken != null) {
-            checkLogout(accessToken);
-            String username = jwtTokenProvider.getUsername(accessToken);
-            log.info("현재 토큰의 username : " + username);
+            try{
+                checkLogout(accessToken);
+                username = jwtTokenProvider.getUsername(accessToken);
+                log.info("현재 토큰의 username : " + username);
+            }catch (IllegalArgumentException e){
+                log.error("Unable to get JWT token",e);
+            }catch (ExpiredJwtException e){
+                log.error("JWT Token has expired",e);
+            }catch (UsernameFromTokenException e){
+                log.error("현재 사용자의 username 을 불러오지 못했습니다.");
+                throw new UsernameFromTokenException("username from token exception");
+            }
+
             if (username != null) {
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
                 equalsUsernameFromToken(userDetails.getUsername(), username);
@@ -50,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 processSecurity(request, userDetails);
             }
         }else{
-
+            log.warn("JWT token does not begin with Bearer String");
         }
         filterChain.doFilter(request, response);
 
