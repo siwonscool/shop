@@ -63,11 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.warn("JWT token does not begin with Bearer String");
         }
         filterChain.doFilter(request, response);
-
-        /*if (requestUri.equals("/login")) {
-            filterChain.doFilter(req, res);
-            // 로그인 로직을 여기서 해결??
-        }*/
     }
 
     //헤더에서 JWT 를 'Bearer' 를 제외하여 가져오고 프론트에서 JWT 를 주지 않는 경우 null 을 반환
