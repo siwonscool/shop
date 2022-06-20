@@ -51,18 +51,4 @@ public class ErrorResponse {
                 .description(errorCode.getDescription())
                 .build());
     }
-
-    public String convertToJson(){
-        ObjectMapper objectMapper = new ObjectMapper();
-        String resultJson = "";
-        try {
-            resultJson = objectMapper.writeValueAsString(this);
-        }catch (Exception e){
-            log.error("Json parsing 에 실패하였습니다 : ", e);
-            return null;
-        }
-        return resultJson;
-    }
-
-
 }

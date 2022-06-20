@@ -1,5 +1,7 @@
 package com.sample.shop.config.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sample.shop.shared.advice.ErrorCode;
 import com.sample.shop.shared.advice.exception.TokenValidateException;
 import com.sample.shop.shared.advice.exception.LogoutException;
@@ -46,11 +48,23 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         errorResponse.setDescription(ex.getMessage());
 
         try{
-            String json = errorResponse.convertToJson();
+            String json = this.convertToJson(errorResponse);
+            log.info(json);
             response.getWriter().write(json);
         }catch (IOException e){
             log.error("Json parsing 에 실패하였습니다 : ", e);
         }
+    }
 
+    private String convertToJson(ErrorResponse errorResponse){
+        ObjectMapper objectMapper = new ObjectMapper();
+        String resultJson = "";
+        try {
+            resultJson = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(errorResponse);
+        }catch (Exception e){
+            log.error("Json parsing 에 실패하였습니다 : ", e);
+            return null;
+        }
+        return resultJson;
     }
 }
