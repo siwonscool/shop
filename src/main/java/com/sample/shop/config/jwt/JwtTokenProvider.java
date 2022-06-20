@@ -71,7 +71,7 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         String username = getUsername(token);
         return username.equals(userDetails.getUsername())
             && !isTokenExpired(token);

@@ -3,6 +3,8 @@ package com.sample.shop.config.filter;
 import com.sample.shop.config.jwt.JwtTokenProvider;
 import com.sample.shop.config.security.CustomUserDetailService;
 import com.sample.shop.login.domain.repository.LogoutAccessTokenRedisRepository;
+import com.sample.shop.shared.advice.exception.TokenValidateException;
+import com.sample.shop.shared.advice.exception.LogoutException;
 import com.sample.shop.shared.advice.exception.UsernameFromTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
@@ -19,8 +21,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @Slf4j
 @Component
@@ -41,7 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (accessToken != null) {
             try{
-                checkLogout(accessToken);
+                if(isLogout(accessToken)){
+                    throw new LogoutException("로그아웃된 회원입니다.");
+                }
                 username = jwtTokenProvider.getUsername(accessToken);
                 log.info("현재 토큰의 username : " + username);
             }catch (IllegalArgumentException e){
@@ -55,8 +57,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (username != null) {
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
-                equalsUsernameFromToken(userDetails.getUsername(), username);
-                validateAccessToken(accessToken, userDetails);
+                if (!isAccessTokenValidate(accessToken,userDetails)){
+                    throw new TokenValidateException("토큰의 정보가 유효하지 않습니다.");
+                }
                 processSecurity(request, userDetails);
             }
         }else{
@@ -70,26 +73,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
-        }
-        return null;
-    }
-
-    private void checkLogout(String accessToken) {
-        if (logoutAccessTokenRedisRepository.existsById(accessToken)) {
-            throw new IllegalArgumentException("이미 로그아웃된 회원입니다.");
+        }else {
+            return null;
         }
     }
 
-    private void equalsUsernameFromToken(String userDetailsUser, String tokenUserName) {
-        if (!userDetailsUser.equals(tokenUserName)) {
-            throw new IllegalArgumentException("username 과 토큰이 일치하지 않습니다.");
-        }
+    private boolean isLogout(String accessToken) {
+        return logoutAccessTokenRedisRepository.existsById(accessToken);
     }
 
-    private void validateAccessToken(String accessToken, UserDetails userDetails) {
-        if (!jwtTokenProvider.validateToken(accessToken, userDetails)) {
-            throw new IllegalArgumentException("토큰 검증 실패");
-        }
+    private boolean isAccessTokenValidate(String accessToken, UserDetails userDetails) {
+        return jwtTokenProvider.validateToken(accessToken,userDetails);
     }
 
     private void processSecurity(HttpServletRequest request, UserDetails userDetails) {
@@ -99,6 +93,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
-
-
 }
