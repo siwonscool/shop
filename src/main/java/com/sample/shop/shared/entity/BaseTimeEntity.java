@@ -1,4 +1,4 @@
-package com.sample.shop.post.domain;
+package com.sample.shop.shared.entity;
 
 
 import java.time.LocalDateTime;

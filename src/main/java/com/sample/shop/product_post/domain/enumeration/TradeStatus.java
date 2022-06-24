@@ -1,4 +1,4 @@
-package com.sample.shop.post.domain.enumeration;
+package com.sample.shop.product_post.domain.enumeration;
 
 import lombok.Getter;
 

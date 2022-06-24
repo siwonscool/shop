@@ -1,8 +1,6 @@
-package com.sample.shop.post.dto;
+package com.sample.shop.product_post.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sample.shop.member.dto.response.MemberUpdateResponseDto;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

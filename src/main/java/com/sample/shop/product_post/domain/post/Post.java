@@ -1,12 +1,17 @@
-package com.sample.shop.post.domain;
+package com.sample.shop.product_post.domain.post;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.sample.shop.member.domain.Member;
-import com.sample.shop.post.domain.enumeration.TradeStatus;
-import com.sample.shop.post.dto.PostRequestDto;
+import com.sample.shop.product_post.domain.enumeration.TradeStatus;
+import com.sample.shop.product_post.domain.product.Product;
+import com.sample.shop.product_post.dto.PostRequestDto;
+import com.sample.shop.shared.entity.BaseTimeEntity;
+import com.sample.shop.shared.enumeration.YorN;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,14 +22,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GeneratorType;
-import reactor.util.annotation.Nullable;
 
 @Entity
 @SequenceGenerator(
@@ -38,8 +41,17 @@ public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "POST_SEQ_GEN")
-    @Column(name = "PRODUCT_ID")
+    @Column(name = "POST_ID")
     private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    @Setter
+    private Member author;
+
+    @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
@@ -53,13 +65,9 @@ public class Post extends BaseTimeEntity {
     @Lob
     private String content;
 
-    @Column(name = "IS_REMOVED")
-    private boolean removed = false;
+    @Enumerated(EnumType.STRING)
+    private YorN deleteYn;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "MEMBER_ID")
-    @Setter
-    private Member author;
 
     @Builder
     public Post(Long id, String title, String category,
@@ -70,8 +78,8 @@ public class Post extends BaseTimeEntity {
         this.category = category;
         this.tradeStatus = tradeStatus;
         this.content = content;
-        this.removed = removed;
         this.author = author;
+        this.deleteYn=YorN.N;
     }
 
 
@@ -82,6 +90,6 @@ public class Post extends BaseTimeEntity {
     }
 
     public void removePost() {
-        this.removed = true;
+        this.deleteYn = YorN.Y;
     }
 }

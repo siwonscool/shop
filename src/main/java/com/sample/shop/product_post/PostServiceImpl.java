@@ -1,12 +1,12 @@
-package com.sample.shop.post;
+package com.sample.shop.product_post;
 
 import com.sample.shop.login.service.TokenLoginService;
 import com.sample.shop.member.MemberServiceImpl;
 import com.sample.shop.member.domain.Member;
-import com.sample.shop.post.domain.Post;
-import com.sample.shop.post.domain.repository.PostRepository;
-import com.sample.shop.post.dto.PostRequestDto;
-import com.sample.shop.post.dto.PostUpdateResponseDto;
+import com.sample.shop.product_post.domain.post.Post;
+import com.sample.shop.product_post.domain.repository.PostRepository;
+import com.sample.shop.product_post.dto.PostRequestDto;
+import com.sample.shop.product_post.dto.PostUpdateResponseDto;
 import com.sample.shop.shared.adaptor.PostAdaptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

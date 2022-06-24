@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.sample.shop.member.domain.Authority;
 import com.sample.shop.member.domain.Member;
 import com.sample.shop.member.domain.MemberStatus;
-import com.sample.shop.post.domain.Post;
+import com.sample.shop.product_post.domain.post.Post;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +53,7 @@ public class MemberAdaptor {
             .password(member.getPassword())
             .memberStatus(member.getMemberStatus())
             .roles(member.getRoles())
-            .posts(member.getPost())
+            .posts(member.getPosts())
             .build();
     }
 }

@@ -1,8 +1,7 @@
-package com.sample.shop.post;
+package com.sample.shop.product_post;
 
-import com.sample.shop.member.MemberController;
-import com.sample.shop.post.dto.PostRequestDto;
-import com.sample.shop.post.dto.PostUpdateResponseDto;
+import com.sample.shop.product_post.dto.PostRequestDto;
+import com.sample.shop.product_post.dto.PostUpdateResponseDto;
 import com.sample.shop.shared.adaptor.PostAdaptor;
 import com.sample.shop.shared.annotation.LoginCheck;
 import com.sample.shop.shared.enumeration.MemberType;
