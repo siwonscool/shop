@@ -51,7 +51,7 @@ public class MemberServiceImpl implements MemberService {
             Member memberFromDb = memberRepository.save(member);
             return MemberUpdateResponseDto.of(memberFromDb.getMemberStatus() == MemberStatus.WITHDRAWAL);
         } catch (Exception e) {
-            log.error("회원정보 삭제에 실패했습니다. member id :{}", id, e);
+            log.error("회원정보 삭제에 실패했습니다. member id : {} ", id, e);
             return null;
         }
     }

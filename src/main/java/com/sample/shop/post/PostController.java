@@ -40,23 +40,22 @@ public class PostController {
     @LoginCheck(type = MemberType.USER)
     @PatchMapping("/{id}")
     public ResponseEntity<PostUpdateResponseDto> updatePost(
-        @RequestBody PostRequestDto postRequestDto, @PathVariable Long postId) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(postService.updatePost(postRequestDto, postId));
+        @RequestBody PostRequestDto postRequestDto, @PathVariable Long id) {
+        return ResponseEntity.ok(postService.updatePost(postRequestDto, id));
     }
 
     @ApiOperation(value = "게시물 1개 조회", notes = "게시물 id를 받아 게시물의 정보를 조회한다.")
     @LoginCheck(type = MemberType.USER)
     @GetMapping("/{id}")
-    public ResponseEntity<PostAdaptor> findPostById(@PathVariable Long postId) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findById(postId));
+    public ResponseEntity<PostAdaptor> findPostById(@PathVariable Long id) {
+        return ResponseEntity.ok(postService.findById(id));
     }
 
     @ApiOperation(value = "게시물 삭제", notes = "게시물 id를 받아 게시물의 삭제여부를 true 로 업데이트 한다")
     @LoginCheck(type = MemberType.USER)
     @DeleteMapping("/{id}")
-    public ResponseEntity<PostUpdateResponseDto> deletePost(@PathVariable Long postId) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.deletePost(postId));
+    public ResponseEntity<PostUpdateResponseDto> deletePost(@PathVariable Long id) {
+        return ResponseEntity.ok(postService.deletePost(id));
     }
 
 

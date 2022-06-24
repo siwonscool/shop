@@ -31,9 +31,10 @@ public class PostServiceImpl implements PostService {
             Member member = memberServiceImpl.findByUsername(username);
             post.setAuthor(member);
             Post insertMemberPost = postRepository.save(post);
+
             return convertPostAdaptor(postRepository.save(insertMemberPost));
         } catch (Exception e) {
-            log.info("게시물 업로드에 실패하였습니다.");
+            log.error("게시물 업로드에 실패하였습니다.",e);
             return null;
         }
     }
