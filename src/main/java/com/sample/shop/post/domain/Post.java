@@ -12,26 +12,32 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GeneratorType;
 import reactor.util.annotation.Nullable;
 
 @Entity
+@SequenceGenerator(
+    name="POST_SEQ_GEN",
+    sequenceName = "POST_SEQ",
+    allocationSize = 1
+)
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@AllArgsConstructor(access = PROTECTED)
-@Builder
 public class Post extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "POST_SEQ_GEN")
     @Column(name = "PRODUCT_ID")
     private Long id;
 
@@ -54,6 +60,20 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     @Setter
     private Member author;
+
+    @Builder
+    public Post(Long id, String title, String category,
+        TradeStatus tradeStatus, String content, boolean removed,
+        Member author) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.tradeStatus = tradeStatus;
+        this.content = content;
+        this.removed = removed;
+        this.author = author;
+    }
+
 
     public void updatePost(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();

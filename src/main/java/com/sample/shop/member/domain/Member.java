@@ -12,8 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,19 +24,21 @@ import lombok.Setter;
 
 import static java.util.stream.Collectors.toList;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 
 @Entity
+@SequenceGenerator(
+    name="MEMBER_SEQ_GEN",
+    sequenceName = "MEMBER_SEQ",
+    allocationSize = 1
+)
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@AllArgsConstructor(access = PROTECTED)
-@Builder
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "MEMBER_SEQ_GEN")
     @Column(name = "MEMBER_ID")
     private Long id;
 
@@ -62,6 +66,22 @@ public class Member {
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> post = new ArrayList<>();
+
+    @Builder
+    public Member(Long id, String username, String email, String password, String nickname,
+        MemberStatus memberStatus, Set<Authority> authorities,
+        List<Post> post) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.memberStatus = memberStatus;
+        this.authorities = authorities;
+        this.post = post;
+    }
+
+
 
     public static Member ofUser(MemberInfoRequestDto memberInfoRequestDto) {
         Member member = Member.builder()
